@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Proefexamen Nederlands</title>
+<style>
+:root{--bg:#f5f4f8;--card:#fff;--ink:#1f2328;--muted:#5d646e;--line:#dde2ea;--acc:#6d3fa8;--acc-ink:#fff;--soft:#efe8f8;
+--ok:#1d7a46;--okbg:#e7f4ec;--bad:#b42318;--badbg:#fdecea}
+@media (prefers-color-scheme:dark){:root{--bg:#16171a;--card:#212328;--ink:#ecebe7;--muted:#a3a7ae;--line:#35383e;--acc:#bb98ef;--acc-ink:#111;--soft:#2d2340;
+--ok:#4cc38a;--okbg:#16342a;--bad:#f2786c;--badbg:#3b1d1b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px}
+header h1{font-size:1.15rem;margin:0}
+header span{color:var(--muted);font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+h2{margin:0 0 8px;font-size:1.4rem}
+p{margin:.4em 0 .8em}
+.muted{color:var(--muted)}
+ul.topics{margin:.3em 0 1em;padding-left:1.2em}
+label.f{display:block;font-weight:600;margin:14px 0 6px}
+input[type=text]{font:inherit;width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+input:focus{outline:none;border-color:var(--acc)}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:10px 16px}
+button.pri{background:var(--acc);border-color:var(--acc);color:var(--acc-ink);font-weight:600}
+button:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:18px;flex-wrap:wrap}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:14px}
+.bar i{display:block;height:100%;background:var(--acc);transition:width .2s}
+.tag{display:inline-block;font-size:.78rem;font-weight:600;color:var(--acc);background:var(--soft);padding:2px 9px;border-radius:99px;margin:0 6px 8px 0}
+.tag.plus{color:var(--bad);background:var(--badbg)}
+.qtext{font-size:1.05rem}
+.zin{font-size:1.15rem;margin:12px 0;padding:10px 14px;background:var(--bg);border-left:4px solid var(--acc);border-radius:0 10px 10px 0}
+.choices{display:grid;gap:8px;margin-top:12px}
+.choice{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;padding:12px}
+.choice .k{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.choice.sel{border-color:var(--acc);background:var(--soft)}
+.choice.sel .k{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.inrow{margin-top:12px;max-width:340px}
+.words{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.words button{padding:7px 10px;font-size:1.08rem}
+.words button.sel{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.tekst{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:4px 14px;margin-bottom:14px}
+.tekst summary{cursor:pointer;font-weight:600;padding:8px 0;color:var(--acc)}
+.tekst h3{margin:4px 0 6px;font-size:1.12rem}
+.tekst h4{margin:10px 0 2px;font-size:.95rem;color:var(--acc)}
+.tekst p{margin:.2em 0 .6em;font-size:.97rem}
+.dots{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
+.dots button{width:34px;height:34px;padding:0;font-size:.8rem;border-radius:8px}
+.dots button.ans{background:var(--soft);border-color:var(--acc)}
+.dots button.cur{outline:2px solid var(--acc);outline-offset:1px}
+.score{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.ring{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;font-size:1.7rem;font-weight:700}
+.tbl{width:100%;border-collapse:collapse;margin-top:14px}
+.tbl td{padding:6px 0;border-bottom:1px solid var(--line)}
+.tbl td:last-child{text-align:right;font-variant-numeric:tabular-nums;padding-left:10px;white-space:nowrap}
+.rev{border-left:4px solid var(--line);margin-top:14px}
+.rev.ok{border-left-color:var(--ok)}
+.rev.bad{border-left-color:var(--bad)}
+.verd{font-weight:700}
+.ok .verd{color:var(--ok)}
+.bad .verd{color:var(--bad)}
+.ans{margin-top:10px;padding:10px 12px;border-radius:10px;font-size:.95rem}
+.ans.mine{background:var(--bg)}
+.rev.ok .ans.mine{background:var(--okbg)}
+.rev.bad .ans.mine{background:var(--badbg)}
+.ans.right{background:var(--okbg)}
+.uitleg{margin-top:10px;font-size:.93rem;color:var(--muted)}
+.hist{font-size:.9rem;margin-top:10px}
+.gg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.gg>div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.gg b.h{font-size:.85rem;color:var(--acc);text-transform:uppercase;letter-spacing:.03em}
+.gg ul{margin:4px 0 0;padding-left:1.1em}
+.gg li{margin:2px 0}
+@media (max-width:480px){.gg{grid-template-columns:1fr}}
+.hint{font-size:.85rem;color:var(--muted);margin-top:6px}
+.small{font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1>Proefexamen Nederlands</h1><span>1ste jaar</span></header>
+  <main id="app"></main>
+</div>
+<script>
+'use strict';
+/* ===== Instellingen ===== */
+const NTFY_TOPIC = 'ned1-6q58fx87pf';             // uitslagen gaan naar https://ntfy.sh/<topic>
+const QUOTA = {C:4, O:3, W:4, B:6, S:3, L:2, T:3}; // aantal vragen per onderdeel (25 in totaal)
+const TOPICS = {
+  C:'Communiceren en spreken',
+  O:'Onderwerp en zinsbouw',
+  W:'Werkwoorden (t.t. en imperatief)',
+  B:'Woorden onderzoeken',
+  S:'Schooltaalwoorden',
+  L:'Teksten verkennen',
+  T:'Leestekst'};
+const LESSEN = {C:'les 1, 2, 3, 6, 8, 15, 18, 19', O:'les 4', W:'les 7', B:'les 8, 11, 14, 16, 17', S:'les 10, 20', L:'les 5, 9, 12, 13', T:'les 5, 13, 17, 19'};
+const KEY = 'ned1';                               // voorvoegsel localStorage
+
+/* ===== Opslag ===== */
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(KEY+'_'+k); return v?JSON.parse(v):d; }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(KEY+'_'+k,JSON.stringify(v)); }catch(e){} },
+  del(k){ try{ localStorage.removeItem(KEY+'_'+k); }catch(e){} }
+};
+
+/* ===== Hulpfuncties ===== */
+const rint = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uniq = a => [...new Set(a)];
+const plain = s => String(s).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+
+/* Kies een item dat nog niet (of het langst geleden) gebruikt is, zodat elke poging andere vragen geeft. */
+let SEEN = null;                                   // enkel gevuld tijdens buildExam()
+function fresh(id, list){
+  const seen = (SEEN && SEEN[id]) || [];
+  let free = list.map((_,i)=>i).filter(i=>!seen.includes(i));
+  let base = seen;
+  if(!free.length){ base = []; free = list.map((_,i)=>i).filter(i=>i!==seen[seen.length-1] || list.length===1); }
+  const i = pick(free);
+  if(SEEN) SEEN[id] = [...base, i];
+  return list[i];
+}
+const gg = (geg,gevr) => `<div class="gg"><div><b class="h">Gegeven</b><ul>${geg.map(x=>`<li>${x}</li>`).join('')}</ul></div><div><b class="h">Gevraagd</b><ul><li>${gevr}</li></ul></div></div>`;
+const zin = s => `<div class="zin">${s}</div>`;
+const gap = s => s.replace('___','<b>_____</b>');
+
+/* Vraagtypes */
+function mc(text, correct, wrong, uitleg, ex){
+  const ch = shuffle([correct,...wrong]);
+  if(new Set(ch).size!==ch.length) throw new Error('dubbele keuze');
+  return {type:'mc', text, choices:ch, correct:ch.indexOf(correct), uitleg, ...ex};
+}
+function mcf(text, choices, correct, uitleg, ex){  // vaste volgorde
+  if(!choices.includes(correct)) throw new Error('antwoord ontbreekt');
+  return {type:'mc', text, choices:[...choices], correct:choices.indexOf(correct), uitleg, ...ex};
+}
+const tf = (text,truth,uitleg,ex) => mcf('<b>Waar of onwaar?</b> '+text, ['Waar','Onwaar'], truth?'Waar':'Onwaar', (truth?'Waar. ':'Onwaar. ')+uitleg, ex);
+const tfPick = (id,list,ex) => { const [t,w,u]=fresh(id,list); return tf(t,w,u,ex); };
+/* invulvraag: meerdere juiste antwoorden mogelijk; het eerste wordt als oplossing getoond */
+function inv(text, answers, uitleg, ex){ return {type:'inv', text, answers:[].concat(answers), uitleg, ...ex}; }
+/* woord(en) aanduiden: "De [oude man] slaapt." */
+function sel(text, marked, uitleg, ex){
+  const toks=[], corr=[]; let on=false;
+  for(let w of marked.split(' ')){
+    if(w.startsWith('[')){ on=true; w=w.slice(1); }
+    const end=w.includes(']'); w=w.replace(']','');
+    if(on) corr.push(toks.length);
+    if(end) on=false;
+    toks.push(w);
+  }
+  if(!corr.length) throw new Error('niets gemarkeerd');
+  return {type:'sel', text, toks, correct:corr, uitleg, ...ex};
+}
+const strip = w => w.replace(/[.,!?;:]+$/,'');
+const marks = m => (m.match(/\[[^\]]+\]/g)||[]).map(x=>x.slice(1,-1));
+const bold = m => m.replace(/\[([^\]]+)\]/g,'<b>$1</b>');
+const others = (correct,cands,n=3) => { const o=uniq(cands.filter(x=>x!==correct)); if(o.length<n) throw new Error('te weinig opties'); return shuffle(o).slice(0,n); };
+const PLUS = {plus:true};
+
+/* ===== Leerstof: Communiceren ===== */
+const COMM = [
+  {s:"Wout stuurt een sms naar zijn trainer: 'Ik ben ziek, ik kom vandaag niet trainen.' De trainer schrapt Wout van de spelerslijst.", zender:'Wout', ontvanger:'de trainer', boodschap:"'Ik ben ziek, ik kom vandaag niet trainen.'", kanaal:'een sms', doel:'laten weten dat hij er vandaag niet bij is', effect:'De trainer schrapt Wout van de spelerslijst.'},
+  {s:"Een verdediger maakt een zware fout. De scheidsrechter wil die fout bestraffen en toont een rode kaart. De verdediger stapt van het veld.", zender:'de scheidsrechter', ontvanger:'de verdediger', boodschap:"'Jij moet van het veld.'", kanaal:'een rode kaart', doel:'een zware fout bestraffen', effect:'De verdediger stapt van het veld.'},
+  {s:"Oma belt naar Fien: 'Kom je zondag pannenkoeken eten?' Zondagmiddag zit Fien bij oma aan tafel.", zender:'oma', ontvanger:'Fien', boodschap:"'Kom je zondag pannenkoeken eten?'", kanaal:'een telefoongesprek', doel:'iemand uitnodigen', effect:'Zondagmiddag zit Fien bij oma aan tafel.'},
+  {s:"De gemeente hangt een affiche op: 'Zondag is het centrum autovrij. Kom te voet!' Die zondag wandelen de inwoners naar het centrum.", zender:'de gemeente', ontvanger:'de inwoners', boodschap:"'Zondag is het centrum autovrij. Kom te voet!'", kanaal:'een affiche', doel:'mensen aansporen om hun auto thuis te laten', effect:'De inwoners wandelen naar het centrum.'},
+  {s:"Sem loopt langs het zwembad. De badmeester wil ongelukken voorkomen en blaast op zijn fluitje. Sem houdt meteen halt.", zender:'de badmeester', ontvanger:'Sem', boodschap:"'Niet lopen langs het water!'", kanaal:'een fluitsignaal', doel:'ongelukken voorkomen', effect:'Sem houdt meteen halt.'},
+  {s:"De leraar muziek mailt naar de ouders: 'Het concert begint vrijdag om 19 uur.' Vrijdag om 19 uur zit de zaal vol ouders.", zender:'de leraar muziek', ontvanger:'de ouders', boodschap:"'Het concert begint vrijdag om 19 uur.'", kanaal:'een e-mail', doel:'informatie geven over het beginuur', effect:'Vrijdag om 19 uur zit de zaal vol ouders.'},
+  {s:"Amir legt een briefje op tafel voor zijn broer: 'Wil jij de hond uitlaten?' Zijn broer leest het en vertrekt met de hond naar het park.", zender:'Amir', ontvanger:'zijn broer', boodschap:"'Wil jij de hond uitlaten?'", kanaal:'een briefje', doel:'hulp vragen', effect:'Zijn broer vertrekt met de hond naar het park.'},
+  {s:"Een presentatrice zegt op de radio: 'Bel ons en kies het volgende liedje!' Binnen vijf minuten krijgt ze honderd telefoontjes van luisteraars.", zender:'de presentatrice', ontvanger:'de luisteraars', boodschap:"'Bel ons en kies het volgende liedje!'", kanaal:'de radio', doel:'het publiek laten meedoen', effect:'Er komen honderd telefoontjes binnen.'},
+  {s:"De bakker zet een bord op het voetpad: 'Vandaag drie koeken voor de prijs van twee!' Heel wat voorbijgangers stappen binnen en kopen koeken.", zender:'de bakker', ontvanger:'de voorbijgangers', boodschap:"'Vandaag drie koeken voor de prijs van twee!'", kanaal:'een bord', doel:'meer klanten lokken', effect:'Heel wat mensen stappen binnen en kopen koeken.'},
+  {s:"Jade tekent een hartje op een kaartje en geeft het aan haar zieke vriendin, om haar te troosten. De vriendin glimlacht weer.", zender:'Jade', ontvanger:'haar vriendin', boodschap:"'Ik denk aan jou.'", kanaal:'een kaartje', doel:'iemand troosten', effect:'De vriendin glimlacht weer.'},
+];
+const ROLUITLEG = {zender:'De zender is wie de boodschap verstuurt (schrijver, spreker, tekenaar …).', ontvanger:'De ontvanger is voor wie de boodschap bedoeld is (lezer, luisteraar, kijker …).', boodschap:'De boodschap is wat de zender wil overbrengen.', kanaal:'Het kanaal is het middel waarmee je de boodschap overbrengt (sms, gesprek, affiche, gebaar …).', doel:'Het doel is wat de zender wil bereiken.', effect:'Het effect is wat er gebeurt nadat de ontvanger de boodschap kreeg. Komt het overeen met het doel, dan is de communicatie geslaagd.'};
+const ACHTER = [
+  ["Mama kijkt naar de berg kleren op Milans vloer. Ze zucht en zegt: 'Gezellig hier!'",'Ruim je kamer op.',['Ik vind je kamer echt gezellig.','Ik wil hier graag blijven zitten.','Je hebt meer kleren nodig.']],
+  ["Het vriest en het raam staat wijd open. Jade kijkt naar Tibo, die naast het raam zit: 'Amai, fris hier!'",'Doe het raam eens dicht.',['Wat een aangename temperatuur!','Doe het raam nog verder open.','Laten we buiten gaan zitten.']],
+  ["Lien komt een halfuur te laat op de training. De trainer zegt streng: 'Fijn dat je er toch al bent!'",'Je bent veel te laat.',['Je bent mooi op tijd.','Ik ben blij dat je zo vroeg bent.','De training begint straks pas.']],
+  ["Sem vraagt of hij de auto van zijn opa mag besturen. Opa lacht: 'Als de kippen tanden krijgen!'",'Nee, dat gebeurt nooit.',['Ja, volgende week.','Ik moet eerst de kippen voederen.','Vraag het aan je tandarts.']],
+  ["Elif zingt luid en vals onder de douche. Haar broer roept: 'Jij wordt vast een wereldster!'",'Je zingt niet goed.',['Je zingt prachtig.','Je moet een plaat opnemen.','Ik wil met jou meezingen.']],
+  ["Tijdens de film praten Wout en Fien luid door. Papa vraagt: 'Zal ik de film wat stiller zetten voor jullie?'",'Zwijg even, ik wil de film horen.',['De film staat te luid.','Ik vind jullie gesprek boeiender dan de film.','Ik wil jullie helpen met jullie gesprek.']],
+  ["Een man houdt Noor op straat staande: 'Heb je een horloge?'",'Hoe laat is het?',['Ik wil jouw horloge kopen.','Je hebt een mooi horloge.','Ik verkoop horloges.']],
+  ["Younes morst voor de derde keer melk. Zijn zus zucht: 'Knap gedaan, hoor!'",'Let toch beter op.',['Dat heb je goed gedaan.','Doe dat nog eens.','Ik vind melk lekker.']],
+];
+const DOELEN = {inf:'de ontvanger informeren', bei:'de mening of het gedrag van de ontvanger beïnvloeden', men:'zijn mening geven', ins:'instructies geven', ver:'een verhaal vertellen'};
+const DOELITEMS = [
+  ['Het weerbericht meldt dat het morgen twaalf graden wordt.','inf',[]],
+  ['Een bordje in het museum vertelt hoe oud het skelet van de mammoet is.','inf',[]],
+  ['De school laat weten dat de sporthal vrijdag gesloten is.','inf',['ins']],
+  ['Een krant schrijft hoeveel bezoekers het festival telde.','inf',['ver']],
+  ['Een reclamespot op tv: "Proef onze nieuwe yoghurt, de lekkerste van het land!"','bei',['men']],
+  ['Een politica vraagt in een toespraak om voor haar te stemmen.','bei',['men','ins']],
+  ['Een dierenasiel maakt een filmpje om mensen te overtuigen een dier te adopteren.','bei',['ins','ver']],
+  ['Een affiche met zwerfvuil op het strand wil mensen ervan overtuigen hun afval mee naar huis te nemen.','bei',['ins','men']],
+  ['Noor schrijft in een recensie dat ze het boek veel te langdradig vond.','men',['bei','inf']],
+  ['Na de wedstrijd zegt Younes dat hij het een saaie match vond.','men',['bei']],
+  ['In een lezersbrief schrijft een buurvrouw dat ze het nieuwe plein lelijk vindt.','men',['bei']],
+  ['Een handleiding toont stap voor stap hoe je een kast in elkaar zet.','ins',['inf']],
+  ['Een filmpje legt uit hoe je zelf een fietsband plakt.','ins',['inf']],
+  ['Een kookboek beschrijft hoe je tomatensoep klaarmaakt.','ins',['inf']],
+  ['De leider van het kamp legt uit hoe je een stevige knoop legt.','ins',['inf']],
+  ['Een auteur schrijft over een draak die bang is voor vuur.','ver',['inf']],
+  ['Opa verzint voor het slapengaan een sprookje voor zijn kleinkinderen.','ver',[]],
+  ['Een tekenfilm volgt een vos die kan praten.','ver',[]],
+];
+const OPEN = ['Waarom speel je graag gitaar?','Hoe heb je die boomhut gebouwd?','Wat vind je van je nieuwe school?','Hoe verliep je eerste dag op kamp?','Wat zou je doen als je burgemeester was?','Waarom ben je gestopt met dansen?','Hoe ziet jouw ideale weekend eruit?','Wat maakt die film zo spannend?'];
+const GESLOTEN = ['Heb je een huisdier?','Eet je liever frieten of pasta?','Ben je al eens in Parijs geweest?','Fiets je naar school?','Wil je appelsap of water?','Is je broer ouder dan jij?','Kun je zwemmen?','Speel je liever voetbal of basketbal?','Heb je gisteren tv gekeken?'];
+const FORMEEL = ['Goedemorgen mevrouw, zou u mij even kunnen helpen?','Geachte heer, ik schrijf u in verband met de schoolreis.','Kunt u mij zeggen waar het secretariaat is, alstublieft?','Met vriendelijke groeten','Mag ik u bedanken voor uw hulp?','Goedemiddag meneer, hebt u even tijd voor mij?'];
+const INFORMEEL = ['Hey, kom je straks mee voetballen?','Yo, alles oké?','Merci, gast!','Wat is er loos?','Tot later, maatje!','Hoi, stuur jij me dat eens door?'];
+const GEPAST = [
+  ['Je vraagt de weg aan een oudere dame die je niet kent.','Dag mevrouw, weet u waar het station is, alstublieft?',['Hey jij, waar is het station?','Zeg, het station, waar is dat?','Yo, station?'],'een onbekende: formele taal'],
+  ['Je mailt voor het eerst naar de directeur van je school.','Geachte directeur, ik heb een vraag over de sportdag.',['Hey directeur, ik heb een vraagje!','Yo, hoe zit dat met die sportdag?','Hallo jij, wanneer is het sportdag?'],'een plechtige situatie: formele taal'],
+  ['Je vraagt aan de bibliothecaris, die je niet kent, hulp bij het zoeken van een boek.','Goedemiddag, zou u mij kunnen helpen om een boek te zoeken?',['Hé, waar staan die boeken nu weer?','Zeg gast, ik zoek een boek.','Kom eens hier, ik vind mijn boek niet.'],'een onbekende: formele taal'],
+  ['Je stuurt een berichtje naar je beste vriend om te gaan zwemmen.','Hoi! Zin om straks te gaan zwemmen?',['Geachte heer, ik nodig u uit om te zwemmen.','Mag ik u beleefd verzoeken mij te vergezellen naar het zwembad?','Hoogachtend verneem ik graag of u wenst te zwemmen.'],'een vertrouwde situatie: informele taal'],
+  ['Je bedankt een onbekende buschauffeur die op je wachtte.','Dank u wel, meneer, dat u even wachtte.',['Merci hè, maat!','Cool van je, gast!','Goed gedaan, jij!'],'een onbekende: formele taal'],
+  ['Je vraagt aan je zus of ze de saus wil doorgeven.','Geef je de saus eens door?',['Zou u de saus kunnen aanreiken, mevrouw?','Geachte zus, ik verzoek u om de saus.','Mag ik u vriendelijk vragen mij de saus te overhandigen?'],'een vertrouwde situatie: informele taal'],
+];
+const RUIS = [
+  ['Tijdens een videogesprek valt plots de wifi weg.','het kanaal',[]],
+  ['De omroepster in het station spreekt, maar de luidsprekers zijn stuk.','het kanaal',[]],
+  ['De postbode verliest de brief die jij aan oma schreef.','het kanaal',[]],
+  ['De bakker stelt een vraag, maar Lien luistert naar muziek met haar oortjes en hoort hem niet.','de ontvanger',[]],
+  ['De leraar geeft uitleg, maar Amir zit te dagdromen.','de ontvanger',[]],
+  ['Papa legt de regels van het spel uit, maar Jade is in slaap gevallen.','de ontvanger',[]],
+  ['De gids mompelt zo stil dat niemand hem verstaat.','de zender',['de boodschap']],
+  ['De trainer is zijn stem kwijt en kan niets uitleggen.','de zender',['de boodschap']],
+  ['De spreker is zo zenuwachtig dat hij voortdurend stottert.','de zender',['de boodschap']],
+];
+const OVUR = [
+  ["Je leest de opdracht en vraagt je af: 'Wat moet ik precies doen?'",'oriënteren'],
+  ['Je gaat na wat het doel van de opdracht is en voor wie je schrijft.','oriënteren'],
+  ['Je maakt een brainstorm en schrijft kernwoorden op een spiekbriefje.','voorbereiden'],
+  ["Je beslist hoe je de spreekopdracht zult aanpakken en zoekt informatie.",'voorbereiden'],
+  ['Je houdt je spreekbeurt voor de klas.','uitvoeren'],
+  ['Je voert het gesprek met je klasgenoot voor de klas.','uitvoeren'],
+  ['Je denkt na over wat goed en wat minder goed ging.','reflecteren'],
+  ['Je noteert een werkpunt voor de volgende keer.','reflecteren'],
+];
+const LUIS_OK = ['Je kijkt de spreker aan.','Je knikt nu en dan.','Je stelt een bijvraag.',"Je moedigt de spreker aan met 'hmm' of 'ja'.",'Je kijkt bezorgd als de ander iets droevigs vertelt.'];
+const LUIS_NOK = ['Je kijkt intussen op je smartphone.','Je onderbreekt de spreker om over jezelf te vertellen.','Je zoekt ondertussen iets in je boekentas.','Je lacht terwijl de ander iets droevigs vertelt.','Je staart de hele tijd door het raam.'];
+const VITA = [
+  ["'Achteraan in de klas hoor ik je niet.'",'volume'],["'Je roept zo hard dat mijn oren pijn doen.'",'volume'],
+  ["'Je stem blijft de hele tijd op dezelfde toonhoogte, je klinkt als een robot.'",'intonatie'],["'Laat je stem op het einde van een vraag omhooggaan.'",'intonatie'],
+  ["'Je ratelt, ik kan niet volgen. Neem af en toe een pauze.'",'tempo'],["'Je spreekt zo traag dat ik bijna in slaap val.'",'tempo'],
+  ["'Je slikt de helft van je woorden in.'",'articulatie'],["'Doe je mond verder open, dan spreek je elke klank duidelijk uit.'",'articulatie'],
+];
+const MOHAB = [
+  ['Fien trekt haar wenkbrauwen op van verbazing.','mimiek',[]],['Tibo glimlacht breed als hij zijn cadeau ziet.','mimiek',[]],
+  ['Noor kijkt haar publiek recht in de ogen.','oogcontact',['mimiek']],['Sem durft zijn gesprekspartner niet aan te kijken.','oogcontact',['mimiek']],
+  ['Milan zit onderuitgezakt op zijn stoel.','houding',['bewegingen']],['Lien staat kaarsrecht voor de klas.','houding',['bewegingen']],
+  ['Wout gaat zo dicht bij Elif staan dat ze zich ongemakkelijk voelt.','afstand',['bewegingen','houding']],['Twee onbekenden laten in de wachtzaal twee stoelen vrij tussen elkaar.','afstand',['houding']],
+  ['Younes zwaait wild met zijn armen terwijl hij vertelt.','bewegingen',['houding']],['Jade tikt voortdurend met haar voet op de grond.','bewegingen',['houding']],
+];
+const FB = [
+  ['na een spreekbeurt','Ik vond je onderwerp boeiend. Naar mijn gevoel mag je iets trager spreken, dan kan ik beter volgen.',['Je sprak veel te snel, dat was niets.','Saai! Volgende keer beter.','Iedereen vond het slecht.']],
+  ['na een voetbalmatch','Ik zag dat je hard werkte. Volgens mij kun je de bal sneller doorspelen.',['Jij speelde echt slecht.','Door jou hebben we verloren.','Blijf volgende keer maar thuis.']],
+  ['na een toneeltje','Ik heb genoten van je spel. Voor mij mag je stem nog wat luider, dan hoort de laatste rij je ook.',['Niemand hoorde iets van wat je zei.','Je kunt gewoon niet acteren.','Dat was belachelijk.']],
+  ['over een tekening','Ik vind je kleuren prachtig. Je zou de achtergrond nog wat kunnen uitwerken.',['Die achtergrond is lelijk.','Mijn kleine zus kan dat beter.','Je kunt niet tekenen.']],
+  ['over een opstel','Ik vond je begin meteen spannend. Ik zou op het einde nog een verrassing toevoegen.',['Je einde trekt op niets.','Wat een flauw verhaal.','Je hebt geen fantasie.']],
+];
+const BERICHT = [
+  ["Je stuurt je klasgenoten dit bericht over je feestje: 'Hoi allemaal, mijn feestje is zaterdag om 14 uur. Groetjes, Noor'",'de plaats',['het uur','de dag','de naam van de zender']],
+  ["Je stuurt je ploegmaats: 'Hey, we trainen woensdag in de sporthal. Tot dan! Sem'",'het uur',['de plaats','de dag','de naam van de zender']],
+  ["Op een briefje aan het prikbord staat: 'Rode fiets te koop, 50 euro. Kom vanavond om 18 uur naar de Kerkstraat 5.'",'de naam van de verkoper',['het uur','de plaats','de prijs']],
+  ["Je stuurt je neef: 'We gaan om 10 uur naar het zwembad in Mol. Ga je mee? Lien'",'de dag',['het uur','de plaats','de naam van de zender']],
+  ["Aan het bord in de winkel hangt: 'Kitten gratis af te halen bij de familie Peeters in Balen, elke avond vanaf 18 uur.'",'het volledige adres',['het uur','de prijs','de naam van de zender']],
+];
+const CRIT = [
+  ["Bericht aan de directeur: 'Yo, ik ben morgen weg. Doei!'",'gepast','De taal past niet bij de ontvanger: bij een directeur gebruik je formele taal.'],
+  ["Mail aan een onbekende leerkracht: 'Hey gast, stuur die taak eens door.'",'gepast','De taal past niet bij de ontvanger: je gebruikt hier beter formele taal.'],
+  ["Bericht aan je vriendin: 'Vanavond spreken we af. Ik wacht op je.'",'volledig','De lezer weet niet waar en om hoe laat jullie afspreken.'],
+  ["Bericht aan je ploegmaats: 'De training van morgen gaat op een andere plaats door.'",'volledig','De lezer weet niet op welke plaats de training doorgaat.'],
+  ["Bericht aan mama: 'ik wort om 17 uur gebragt door de mama van Elif, dus je moet niet naar school kome'",'correct','Er staan spelfouten in en de zin heeft geen hoofdletter en geen punt.'],
+  ["Bericht aan opa: 'Dag opa, ik kom zaterdag om 10 uur met de fiets naar je huis Ik vint het leuk om te helpen in de tuin'",'correct','Er ontbreken leestekens en er staat een spelfout in (vint → vind).'],
+];
+
+/* ===== Leerstof: Onderwerp ===== */
+const ONDERWERP = [
+  ['Elke ochtend fietst [mijn buurmeisje] naar school.','WG'],['[De nieuwe leraar muziek] speelt ook drums.','WG'],['Morgen vertrekt [onze klas] naar zee.','WG'],
+  ['In de tuin ligt [een grote stapel bladeren].','WG'],['[Wie te laat komt,] krijgt geen soep meer.','Z'],['Na de les wachten [Noor en Amir] aan de poort.','WG'],
+  ['Door de hevige regen staat [het plein] onder water.','WG'],['Gisteren won [de jongste speler] een medaille.','WG'],['[Wie graag leest,] vindt hier zeker een boek.','Z'],
+  ['Onder de brug slapen [enkele eenden].','WG'],['Voor zijn verjaardag kreeg [mijn neef] een drone.','WG'],['Soms vergeet [ik] mijn turnzak.','W'],
+  ['[De hond van de buren] blaft de hele nacht.','WG'],['Vanavond koken [papa en ik] spaghetti.','WG'],['In de verte hoor [je] de trein.','W'],
+  ['[Alles wat blinkt,] trekt eksters aan.','Z'],['Zonder helm mag [niemand] op de klimmuur.','W'],['Tijdens de pauze verkoopt [het derde jaar] wafels.','WG'],
+  ['[Het oude kasteel] trekt veel toeristen.','WG'],['Op woensdag zwemmen [jullie] altijd.','W'],['[Wat daar ligt,] is van Tibo.','Z'],['Plots begon [iedereen] te lachen.','W'],
+  ['[De jongen die altijd fluit,] woont hier vlakbij.','Z'],['Op het dak zit [een witte duif].','WG'],['[Wie wil winnen,] moet hard oefenen.','Z'],['Met Kerstmis krijgen [wij] bezoek.','W'],
+];
+const ONDVRAAG = [
+  'Welke film heeft [jouw zus] gekozen?','Waarom lacht [iedereen] zo luid?','Wanneer begint [de nieuwe reeks] eigenlijk?','Wat heeft [die verkoper] jou verteld?','[Wie] heeft mijn gom gezien?',
+  'Welk lied zingen [de kinderen] straks?','Waar verstopt [de eekhoorn] zijn nootjes?','[Welke speler] scoorde het eerste doelpunt?','Hoe laat landt [het vliegtuig] vandaag?','[Wat] ritselt daar in de struiken?','Welke trui zal [ik] morgen dragen?','Wat heeft [de dokter] daarover gezegd?',
+];
+const PERS = [
+  ['Ik','1ste persoon enkelvoud'],['Mijn zus en ik','1ste persoon meervoud'],['Wij','1ste persoon meervoud'],['Jij','2de persoon enkelvoud'],['Jullie','2de persoon meervoud'],
+  ['Jij en je broer','2de persoon meervoud'],['De hond van oma','3de persoon enkelvoud'],['Het voetbalteam','3de persoon enkelvoud'],['Lien en Sem','3de persoon meervoud'],['De katten van de buren','3de persoon meervoud'],
+  ['De hele klas','3de persoon enkelvoud'],['Papa en ik','1ste persoon meervoud'],['De jongen die danst','3de persoon enkelvoud'],['Hun ouders','3de persoon meervoud'],['Je','2de persoon enkelvoud'],['Niemand','3de persoon enkelvoud'],
+];
+const VERVANG = [
+  ['<b>Mijn ouders en ik</b> gaan naar zee.','wij'],['<b>Jij en je vriendinnen</b> zingen mooi.','jullie'],['<b>Mijn opa</b> slaapt in de zetel.','hij'],['<b>Mijn tante</b> werkt in Gent.','zij'],
+  ['<b>Het vliegtuig</b> landt om negen uur.','het'],['<b>De kinderen van hiernaast</b> spelen buiten.','zij'],['<b>Het huis op de hoek</b> staat leeg.','het'],['<b>Tibo en jij</b> zijn de winnaars.','jullie'],
+  ['<b>Mijn broer en ik</b> delen een kamer.','wij'],['<b>De buurjongen</b> heeft een drumstel.','hij'],['<b>De zangeres</b> geeft een concert.','zij'],['<b>Het paard</b> galoppeert door de wei.','het'],['<b>Elif en haar zus</b> bakken koekjes.','zij'],['<b>Onze leraar, meneer Claes,</b> vertelt een mop.','hij'],
+];
+const VOLG = [ // onderwerp, pv, tijd/plaats, rest
+  ['wij','gaan','volgende week','op schoolreis'],['Elif','speelt','elke zaterdag','basketbal'],['de buren','vertrekken','morgen','met vakantie'],['Sem','oefent','in de garage','op zijn drumstel'],
+  ['mijn oma','bakt','op zondag','een taart'],['de leerlingen','eten','in de refter','hun boterhammen'],['ik','lees','elke avond','een strip'],['het team','traint','na school','in de sporthal'],['Jade','vond','gisteren','een gouden ring'],['de kat','ligt','onder de tafel','te slapen'],
+];
+const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+
+/* ===== Leerstof: Werkwoorden ===== */
+// [zin met ___, infinitief, antwoord(en)]
+const WW = {
+  hij:[['De wind ___ de bladeren weg.','wegblazen','blaast'],['Mijn zus ___ volgende week twaalf jaar.','worden','wordt'],['De ober ___ drie borden vast.','vasthouden','houdt'],['Het vliegtuig ___ om zes uur.','landen','landt'],
+    ['De kok ___ het deeg.','kneden','kneedt'],['Elke avond ___ opa de krant.','lezen','leest'],['De brandweer ___ de kat uit de boom.','redden','redt'],['Wat ___ dat moeilijke woord?','betekenen','betekent'],
+    ['De gids ___ ons rond in het museum.','rondleiden','leidt'],['Het vuur ___ zich heel snel.','verspreiden','verspreidt'],['Amir ___ die film grappig.','vinden','vindt'],['Wie ___ deze beker?','verdienen','verdient'],
+    ['De trein ___ vandaag niet.','rijden','rijdt'],['Fien ___ al een uur op de bus.','wachten','wacht'],['Het bestuur ___ morgen over het plan.','beslissen','beslist'],['De juf ___ elke vraag.','beantwoorden','beantwoordt'],
+    ['Het kaarsje ___ de hele nacht.','branden','brandt'],['Mijn neef ___ veel tijd aan zijn hobby.','besteden','besteedt'],['In dat kasteel ___ een oude graaf.','wonen','woont'],['Dat ___ niet elke dag.','gebeuren','gebeurt'],['De dief ___ in de gevangenis.','belanden','belandt'],['Het onderzoek ___ dat het werkt.','bewijzen','bewijst']],
+  ik:[['Ik ___ dat een goed idee.','vinden','vind'],['Van lang lopen ___ ik moe.','worden','word'],['Ik ___ al tien minuten op jou.','wachten','wacht'],['Straks ___ ik een brief naar mijn tante.','zenden','zend'],
+    ['Ik ___ meteen op je vraag.','antwoorden','antwoord'],['Soms ___ ik mijn ogen uit.','uitwrijven','wrijf'],['Ik ___ het antwoord nooit.','raden','raad'],['Vandaag ___ ik een uur aan mijn taak.','besteden','besteed'],['Ik ___ snoep voor het slapen.','vermijden','vermijd'],['Elke zomer ___ ik met de trein.','reizen','reis'],['Ik ___ de trap af.','afglijden',['glijd','glij']]],
+  jij:[['Jij ___ altijd de beste plaats.','vinden','vindt'],['Jij ___ het antwoord vast.','raden','raadt'],['Je ___ drukke plaatsen liever.','vermijden','vermijdt'],['Jij ___ snel kwaad.','worden','wordt'],['Je ___ veel tijd aan je hobby.','besteden','besteedt'],
+    ['Jij ___ de deur open.','openhouden','houdt'],['Je ___ nooit op mijn berichtjes.','antwoorden','antwoordt'],['Jij ___ je snel aan.','aankleden','kleedt'],['Je ___ je goed voor op de toets.','voorbereiden','bereidt'],['U ___ de groep naar de top.','leiden','leidt']],
+  jijna:[['___ jij dat liedje ook mooi?','vinden','vind'],['Wanneer ___ je dertien?','worden','word'],['Waarom ___ jij niet op mijn vraag?','antwoorden','antwoord'],['Hoeveel tijd ___ je aan sport?','besteden','besteed'],['___ je mij straks even?','helpen','help'],
+    ['___ jij de oplossing?','raden','raad'],['Hoe ___ jij die vraag?','beantwoorden','beantwoord'],['___ jij van pannenkoeken?','houden',['houd','hou']],['Waarom ___ jij de drukte?','vermijden','vermijd'],['Naar wie ___ jij dat pakje?','zenden','zend'],['Wanneer ___ je je voor op de toets?','voorbereiden','bereid'],['___ je het werkstuk morgen af?','afronden','rond']],
+  je:[['___ je broer dat ook mooi?','vinden','vindt'],['Wanneer ___ je zus veertien?','worden','wordt'],['Waarom ___ je vader niet?','antwoorden','antwoordt'],['___ je moeder van muziek?','houden','houdt'],['Hoe ___ je hond zich vandaag?','voelen','voelt'],['___ je opa met de trein?','reizen','reist'],['___ je vriendin het juiste antwoord?','raden','raadt'],['___ je oma zelf haar auto?','besturen','bestuurt'],['Hoeveel ___ je zus aan kleren?','besteden','besteedt'],['___ je kat altijd op haar poten?','landen','landt']],
+  mv:[['De kinderen ___ over het ijs.','glijden','glijden'],['Jullie ___ veel te snel.','praten','praten'],['Noor en Sem ___ twaalf jaar.','worden','worden'],['Wij ___ het een leuke klas.','vinden','vinden'],['De brandweerlieden ___ de poes.','redden','redden'],['Mijn ouders ___ in een oud huis.','wonen','wonen'],['Jullie ___ goed op de vraag.','antwoorden','antwoorden'],['De vlammen ___ zich snel.','verspreiden','verspreiden']],
+  imp:[['___ je schoenen uit!','uittrekken','trek'],['___ even op mij!','wachten','wacht'],['___ je goed vast!','vasthouden',['houd','hou']],['___ het juiste antwoord aan.','aanduiden','duid'],['___ niet zo boos!','worden','word'],['___ je vandaag nog aan voor de cursus!','aanmelden','meld'],
+    ['___ nooit je wachtwoord!','verraden','verraad'],['___ het water in het glas.','gieten','giet'],['___ de taart in acht stukken.','verdelen','verdeel'],['___ op mijn vraag!','antwoorden','antwoord'],['___ je goed voor!','voorbereiden','bereid'],['___ ons een kaartje!','zenden','zend'],['___ je armen wijd.','spreiden','spreid'],['___ het deeg vijf minuten.','kneden','kneed']],
+};
+const WWUITLEG = {
+  hij:'Het onderwerp staat in de 3de persoon enkelvoud: stam + t.', ik:'Het onderwerp is ik (1ste persoon enkelvoud): alleen de stam.', jij:'Het onderwerp jij/je/u staat vóór de persoonsvorm (2de persoon enkelvoud): stam + t.',
+  jijna:'Het onderwerp jij/je staat achter de persoonsvorm: de uitgang -t valt weg, dus alleen de stam.', je:"'Je' is hier niet het onderwerp, maar een deel ervan (bv. je broer = hij). 3de persoon enkelvoud: stam + t.",
+  mv:'Het onderwerp staat in het meervoud: het hele werkwoord.', imp:'Dit is een bevel (imperatief). De imperatief schrijf je zoals de stam, zonder uitgang.' };
+function wwVraag(k){
+  const [z,infi,a]=fresh('ww_'+k,WW[k]), ans=[].concat(a);
+  const extra = (k==='hij'||k==='jij'||k==='je') && /t$/.test(ans[0]) && !/dt$/.test(ans[0]) && /ten$/.test(infi) ? ' Eindigt de stam al op een t, dan komt er geen tweede t bij.' : '';
+  return inv(k==='imp'?'Schrijf de <b>imperatief</b> (het bevel).':'Schrijf de <b>persoonsvorm in de tegenwoordige tijd</b>.', ans,
+    `${WWUITLEG[k]}${extra}<br>Juist: ${cap(z.replace('___','<b>'+ans[0]+'</b>'))}`, {gg:gg([gap(z),`infinitief: <b>${infi}</b>`], k==='imp'?'de imperatief':'de persoonsvorm (t.t.)'), hint:'Typ alleen het ontbrekende woord.'});
+}
+const STAM = [['geloven','geloof'],['verhuizen','verhuis'],['reizen','reis'],['landen','land'],['schrijven','schrijf'],['lopen','loop'],['redden','red'],['kloppen','klop'],['beven','beef'],['raden','raad'],['antwoorden','antwoord'],['blazen','blaas'],['zwemmen','zwem'],['leiden','leid'],['vermijden','vermijd'],['proeven','proef'],['wachten','wacht'],['spreiden','spreid']];
+const INFIN = [['leidt','leiden'],['vindt','vinden'],['beeft','beven'],['reist','reizen'],['rondt … af','afronden'],['bereidt … voor','voorbereiden'],['grijpt … vast','vastgrijpen'],['houdt … op','ophouden'],['verhuist','verhuizen'],['gelooft','geloven'],['nodigt … uit','uitnodigen'],['meldt … aan','aanmelden'],['vermijdt','vermijden'],['blaast','blazen']];
+const PVZIN = ['Morgen [begint] de vakantie.','De koffie [wordt] in de keuken gezet.','Mijn broer [wil] later piloot worden.','[Vind] jij dat ook grappig?','In de bus [zaten] geen andere reizigers.','Het museum [heeft] een nieuwe zaal geopend.','Vanavond [gaan] we naar een film kijken.','De pakjes [liggen] onder de trap.','Waarom [lach] je zo hard?','Sem [mag] vandaag niet zwemmen.','Het beeld [is] gisteren verdwenen.','Tijdens de storm [brak] een dikke tak.','Eindelijk [kan] Lien rustig slapen.','De leerlingen [hebben] hard gewerkt.','Na de wedstrijd [drinken] de spelers veel water.','Op de markt [verkoopt] mijn oom bloemen.'];
+const FOUTWW = [['Geluid [verspreid] zich snel door de lucht.','verspreidt'],['Dat [gebeurd] elke dag opnieuw.','gebeurt'],['Soms [wordt] ik wakker van de regen.','word'],['Waarom [vindt] jij die film zo saai?','vind'],['De hond [houd] de stok stevig vast.','houdt'],['[Meldt] je vandaag nog aan!','meld'],['Mijn zus [antwoord] nooit op berichten.','antwoordt'],['Wat [betekend] dat bord?','betekent'],['Het pakje [beland] morgen in de bus.','belandt'],['Wie [beantwoord] de eerste vraag?','beantwoordt'],['[Wordt] je ook zo moe van die hitte?','word'],['Ik [vindt] dat geen goed idee.','vind'],['Elk jaar [brand] hier een groot vuur.','brandt'],['Hij [leid] de groep naar de top.','leidt'],['Je broer [word] zeker wereldkampioen.','wordt']];
+const ZJUIST = ['Vind jij dat ook zo leuk?','Word je snel moe van lopen?','Wordt je zus volgend jaar tien?','Hij houdt van zoute popcorn.','Ik word blij van zon.','Jij vindt altijd een oplossing.','Antwoord jij op haar mail?','Meld je aan voor het kamp!','Dat gebeurt niet vaak.','Vindt je moeder dat goed?','Houd de ladder vast!','Wat betekent dat woord?'];
+const ZFOUT = ['Vindt jij dat ook zo leuk?','Wordt jij snel moe van lopen?','Word je zus volgend jaar tien?','Hij houd van zoute popcorn.','Ik wordt blij van zon.','Jij vind altijd een oplossing.','Antwoordt jij op haar mail?','Meldt je aan voor het kamp!','Dat gebeurd niet vaak.','Vind je moeder dat goed?','Houdt de ladder vast!','Wat betekend dat woord?'];
+const JEROL = [['Vindt <b>je</b> broer dat mooi?','b'],['Word <b>je</b> snel moe?','o'],['Jij wast <b>je</b> elke ochtend.','w'],['Jij haast <b>je</b> naar huis.','w'],['Help <b>je</b> ons straks?','o'],['Slaapt <b>je</b> poes buiten?','b'],['Vergis jij <b>je</b> nooit?','w'],['Kom <b>je</b> morgen ook?','o'],['Werkt <b>je</b> tante hier?','b'],['Waar ligt <b>je</b> boekentas?','b'],['Herinner jij <b>je</b> die dag nog?','w'],['Waarom lach <b>je</b> zo?','o']];
+const JENM = {o:'het onderwerp', b:'een deel van het onderwerp (bezittelijk voornaamwoord)', w:'het hoort bij het werkwoord (wederkerend voornaamwoord)'};
+
+/* ===== Leerstof: Woorden ===== */
+const SAM = ['regenjas','boekentas','zonnebril','keukendeur','fietsbel','sneeuwpop','tandarts','voetbalveld','tuinstoel','kaasboterham','schoolplein','huissleutel'];
+const AFL = ['onmogelijk','gezondheid','vriendelijk','herlezen','leerling','schoonheid','dankbaar','eenzaam','wandeling','vriendschap','machteloos','onveilig','ontdekken','rijkdom'];
+const GRO = ['tafel','hond','lamp','boek','glas','boom','stoel','vis','brood','deur'];
+const VOORV = [['onveilig','on'],['herlezen','her'],['verkopen','ver'],['ontdekken','ont'],['misbruik','mis'],['wantrouwen','wan'],['ondiep','on'],['herbeginnen','her'],['verjagen','ver'],['ontwaken','ont'],['bewonen','be']];
+const ACHTERV = [['vrijheid','heid'],['zichtbaar','baar'],['eenzaam','zaam'],['wandeling','ing'],['vriendschap','schap'],['gevaarlijk','lijk'],['kleurloos','loos'],['kinderachtig','achtig'],['schrijver','er'],['rijkdom','dom'],['moeilijkheid','heid'],['leesbaar','baar']];
+const GROND = [['onvriendelijk',['vriend']],['schoonheid',['schoon']],['gezondheid',['gezond']],['smakelijk',['smaak']],['kleurloos',['kleur']],['angstig',['angst']],['gevaarlijk',['gevaar']],['onveilig',['veilig']],['vriendschap',['vriend']],['dankbaar',['dank']],['rijkdom',['rijk']],['ondiep',['diep']],['moedig',['moed']]];
+const ALFA = [
+  ['kaars','kaart','kast','kat','kater'],['boef','boek','boer','boog','boom'],['Balen','Bilzen','Boom','Bornem','Brugge'],['peer','perzik','pompoen','prei','pruim'],['vis','visser','vlag','vlieg','vlinder'],
+  ['Maaseik','Malle','Mechelen','Mol','Mortsel'],['aap','aardbei','adelaar','adem','agenda'],['schaap','schaar','schip','schoen','school'],['zon','zondag','zonnebril','zool','zus'],['tijd','tijger','trap','trein','trui'],['lam','lamp','land','lang','lepel'],['Gent','Genk','Geel','Gavere','Grimbergen'].sort(),
+  ['regen','reiger','reis','reus','rijst'],['druif','druk','drum','duif','duim'],
+];
+const TREF = [['gezwommen','zwemmen'],['zalen','zaal'],['mooiste','mooi'],['boompje','boom'],['liep','lopen'],['slimmer','slim'],['lekkere','lekker'],['honden','hond'],['gegeten','eten'],['brieven','brief'],['vergat','vergeten'],['daken','dak'],['bloemetje','bloem'],['grotere','groot'],['dacht','denken'],['glaasjes','glas'],['dunne','dun'],['werd','worden'],['kinderen','kind'],['stoutste','stout'],['geholpen','helpen'],['druiven','druif'],['gekke','gek']];
+const LEMMA = [
+  {w:'bank',b:['lang zitmeubel voor meer personen','instelling waar je geld bewaart of leent'],z:[['De kat ligt te slapen op de bank.',0],['Papa haalt geld af bij de bank.',1],['Oma zit met een boek op de bank.',0],['Na de overval was de bank een week gesloten.',1]]},
+  {w:'muis',b:['klein knaagdier met een lange staart','apparaatje om een computer te bedienen','dikke deel van de hand onder de duim'],z:[['Er zit een muis achter de kast, ze knabbelt aan de kaas.',0],['Klik met de rechterknop van je muis.',1],['Ik heb een blaar op de muis van mijn hand.',2]]},
+  {w:'blad',b:['plat groen deel van een plant','vel papier','tijdschrift of krant'],z:[['In de herfst valt elk blad van de boom.',0],['Schrijf je naam bovenaan het blad.',1],['Dat blad verschijnt elke week en telt veel lezers.',2]]},
+  {w:'slot',b:['toestel om iets mee af te sluiten','einde, laatste deel','kasteel'],z:[['Ik ben de code van mijn slot vergeten.',0],['Het slot van de film was ontroerend.',1],['De graaf woonde in een slot met vier torens.',2]]},
+  {w:'vorst',b:['temperatuur onder nul','koning of andere heerser'],z:[['Door de vorst is de vijver dichtgevroren.',0],['De vorst regeerde dertig jaar over zijn land.',1],['Dek de planten af, er komt vorst.',0]]},
+  {w:'arm',b:['lichaamsdeel tussen schouder en hand','met weinig geld of bezit'],z:[['Sem brak zijn arm bij het skaten.',0],['Het arme gezin had geen geld voor eten.',1],['Ze droeg een gouden armband om haar arm.',0]]},
+  {w:'bloem',b:['deel van een plant, vaak kleurig','fijn gemalen graan'],z:[['De bij vliegt van bloem naar bloem.',0],['Voeg 200 gram bloem toe aan het deeg.',1],['Ze stak een bloem in haar haar.',0]]},
+  {w:'kop',b:['hoofd van een dier','drinkbeker met een oor','titel boven een krantenartikel'],z:[['De ezel schudt met zijn kop.',0],['Opa drinkt een kop koffie.',1],['Boven het krantenartikel stond een opvallende kop.',2]]},
+];
+const LEMINFO = [
+  {t:'<b>robot</b> (de; m; robots) machine die taken zelfstandig kan uitvoeren',g:'mannelijk',m:'robots',l:'de'},
+  {t:'<b>gedicht</b> (het; o; gedichten) tekst in verzen, vaak met rijm',g:'onzijdig',m:'gedichten',l:'het'},
+  {t:'<b>vergadering</b> (de; v; vergaderingen) bijeenkomst om iets te bespreken',g:'vrouwelijk',m:'vergaderingen',l:'de'},
+  {t:'<b>kompas</b> (het; o; kompassen) instrument dat het noorden aanwijst',g:'onzijdig',m:'kompassen',l:'het'},
+  {t:'<b>pinguïn</b> (de; m; pinguïns) zwart-witte zeevogel die niet kan vliegen',g:'mannelijk',m:'pinguïns',l:'de'},
+  {t:'<b>bakkerij</b> (de; v; bakkerijen) plaats waar brood gebakken wordt',g:'vrouwelijk',m:'bakkerijen',l:'de'},
+];
+const VERWBEZ = [['De koningin zwaait naar ___ volk.','haar'],['Het dorp viert ___ jaarlijkse feest.','zijn'],['De buren wassen ___ auto.','hun'],['De koning zet ___ kroon af.','zijn'],['De merrie beschermt ___ veulen.','haar'],['Het team wint ___ eerste wedstrijd.','zijn'],['De regering legt ___ plannen voor.','haar'],['De leerlingen ruimen ___ lokaal op.','hun'],['De haan schudt ___ veren.','zijn'],['Het museum opent ___ deuren.','zijn'],['Mijn tante verkoopt ___ huis.','haar'],['Elif en Jade zoeken ___ fietsen.','hun']];
+const VERWPERS = [['Het boek is spannend. ___ ligt op mijn bed.','Het'],['De vergadering duurt lang. ___ begon om acht uur.','Ze'],['De stier is boos. ___ stampt op de grond.','Hij'],['Mijn laarzen zijn vuil. ___ staan buiten.','Ze'],['De zangeres is ziek. ___ zingt vanavond niet.','Ze'],['Het raam is stuk. ___ moet hersteld worden.','Het'],['De ezel balkt. ___ heeft honger.','Hij'],['De oplossing is eenvoudig. ___ staat achteraan in het boek.','Ze'],['Het potlood is bot. ___ moet geslepen worden.','Het'],['Mijn oom woont in Spanje. ___ komt straks op bezoek.','Hij'],['De tekening is klaar. ___ hangt aan de muur.','Ze'],['Het vliegtuig vertrekt. ___ vliegt naar Rome.','Het']];
+const SYN = [['blij','vrolijk',['verdrietig','moe','boos']],['vlug','snel',['traag','stil','stevig']],['beginnen','starten',['eindigen','wachten','herhalen']],['de woning','het huis',['de tuin','de straat','de oprit']],['angstig','bang',['moedig','rustig','vrolijk']],['het geschenk','het cadeau',['het feest','de kaart','de strik']],['kwaad','boos',['blij','verlegen','moe']],['de arts','de dokter',['de patiënt','de apotheek','het ziekenhuis']],['het lawaai','de herrie',['de stilte','de muziek','de stem']],['ophouden','stoppen',['beginnen','doorgaan','vertragen']],['fout','verkeerd',['juist','moeilijk','vreemd']],['misschien','wellicht',['zeker','nooit','altijd']],['meteen','onmiddellijk',['later','soms','eindelijk']],['gevaarlijk','riskant',['veilig','spannend','verboden']],['gierig','krenterig',['gul','rijk','arm']],['moeilijk','lastig',['eenvoudig','lang','saai']],['het gezicht','het gelaat',['de rug','het gehoor','de hals']],['kapot','stuk',['nieuw','vuil','oud']]];
+const ANT = [['beknopt','uitgebreid',['kort','duidelijk','saai']],['gierig','gul',['krenterig','rijk','arm']],['moedig','laf',['dapper','sterk','boos']],['vertrekken','aankomen',['weggaan','reizen','wachten']],['de winst','het verlies',['het geld','de prijs','de wedstrijd']],['stevig','wankel',['sterk','zwaar','hard']],['de vijand','de vriend',['de tegenstander','de soldaat','de strijd']],['de toekomst','het verleden',['morgen','de droom','de klok']],['zichtbaar','onzichtbaar',['duidelijk','helder','kleurrijk']],['ingewikkeld','eenvoudig',['moeilijk','verward','lang']],['nat','droog',['vochtig','koud','glad']],['vrijwillig','verplicht',['graag','gratis','samen']],['natuurlijk','kunstmatig',['vanzelfsprekend','gezond','groen']],['drukte','rust',['lawaai','haast','werk']]];
+const GEVOEL = [['eten','vreten',['nuttigen','tafelen','dineren']],['drinken','zuipen',['nippen','proeven','een glas nuttigen']],['een huis','een krot',['een woning','een villa','een thuis']],['een geur','een stank',['een aroma','een parfum','een reuk']],['praten','zwammen',['spreken','vertellen','converseren']],['een hond','een mormel',['een viervoeter','een trouwe vriend','een waakhond']],['een auto','een wrak',['een wagen','een voertuig','een limousine']]];
+const BN = ['De [oude] man wandelt in het park.','Ze draagt een [groene] jurk.','Het water in het meer is [koud].','Mijn zus heeft een [leuk] idee.','Een [hongerige] wolf sluipt door het bos.','De film van gisteren was [spannend].','We eten vandaag [warme] soep.','Op de kast staat een [zware] doos.','Het kind kreeg een [zachte] deken.','De [jongste] speler scoorde een doelpunt.','In de hoek staat een [blauwe] vaas.','Het [stoute] hondje blaft naar de postbode.'];
+const ZN = ['De [hond] slaapt onder de [tafel].','[Noor] koopt een [boek] in de [winkel].','Het [vliegtuig] vertrekt naar [Rome].','Een [egel] zoekt [voedsel] in de [tuin].','De [kapitein] bewaart de [schat] op een [eiland].','Mijn [oma] bakt lekkere [wafels].','In de [lente] bloeien de [tulpen].','[Amir] heeft veel [geduld].','De [bakker] verkoopt warme [broodjes].','Het [kind] speelt met een [bal].','De [leeuw] brult in zijn [kooi].','Onze [klas] bezoekt een [museum].'];
+const LW = ['[De] kat ligt op [een] kussen.','[Het] meisje heeft [geen] honger.','In [de] zomer eten we graag [een] ijsje.','[Een] vogel bouwt [het] nest in twee dagen.','Er staat [geen] melk in [de] koelkast.','[De] leraar leest [een] gedicht voor.','Op [het] plein staat [geen] auto.','[Een] jongen raapt [de] bal op.'];
+const EIG = [['antwerpen',['stad','haven','station']],['schelde',['rivier','beek','brug']],['spanje',['land','strand','vakantie']],['europa',['werelddeel','kaart','zee']],['brussel',['hoofdstad','plein','regering']],['mieke',['meisje','zus','vriendin']],['ardennen',['berg','bos','vallei']],['italië',['pizza','eiland','reis']],['limburg',['provincie','dorp','gemeente']],['amerika',['vliegtuig','oceaan','wolkenkrabber']]];
+const TRAP = [['duur','v','duurder'],['goed','v','beter'],['goed','o','best'],['weinig','v','minder'],['veel','o','meest'],['grappig','v','grappiger'],['zuur','v','zuurder'],['groot','o','grootst'],['lekker','v','lekkerder'],['ver','v','verder'],['mooi','o','mooist'],['dun','v','dunner'],['lief','v','liever'],['klein','o','kleinst'],['grijs','v','grijzer'],['zwaar','v','zwaarder'],['dik','o','dikst'],['veel','v','meer']];
+const TRAPH = [['langer','vergrotende trap'],['snelst','overtreffende trap'],['spannend','stellende trap'],['moediger','vergrotende trap'],['best','overtreffende trap'],['lekker','stellende trap'],['beter','vergrotende trap'],['donker','stellende trap'],['duurst','overtreffende trap'],['bitter','stellende trap'],['minder','vergrotende trap'],['gekst','overtreffende trap']];
+const CTX = [
+  ["De rechter was <b>onverbiddelijk</b>, met andere woorden: zeer streng.",'synoniem','met andere woorden'],["Hij lijdt aan <b>insomnia</b>, oftewel slapeloosheid.",'synoniem','oftewel'],["De bron was <b>potabel</b>, met andere woorden: drinkbaar.",'synoniem','met andere woorden'],
+  ["Mijn zus is erg <b>extravert</b>. Mijn broer is daarentegen heel gesloten.",'antoniem','daarentegen'],["Het eerste feest was <b>sober</b>, maar het tweede was net heel overdadig.",'antoniem','maar'],["In tegenstelling tot de <b>nomaden</b> wonen deze mensen altijd op dezelfde plaats.",'antoniem','in tegenstelling tot'],
+  ["Ze speelt op allerlei <b>percussie-instrumenten</b>, zoals trommels, triangels en bekkens.",'voorbeelden','zoals'],["Op de markt vind je veel <b>specerijen</b>. Denk maar aan peper, kaneel en kurkuma.",'voorbeelden','denk maar aan'],["Hij verzamelt <b>knaagdieren</b>, bijvoorbeeld hamsters, muizen en cavia's.",'voorbeelden','bijvoorbeeld'],
+  ["Mijn oom is <b>imker</b>. Dat is iemand die bijen houdt.",'omschrijving','Dat is iemand die …'],["We zagen een <b>geiser</b>: een bron waaruit heet water omhoogspuit.",'omschrijving','de uitleg na de dubbele punt'],["Elif heeft <b>hoogtevrees</b>. Dat betekent dat ze bang is op hoge plaatsen.",'omschrijving','Dat betekent dat …'],
+];
+const CTXNM = {synoniem:'een synoniem in de buurt', antoniem:'een antoniem in de buurt', voorbeelden:'voorbeelden die erbij staan', omschrijving:'een omschrijving of definitie'};
+const BETEK = [
+  ['De soep was <b>lauw</b>: niet koud, maar ook zeker niet heet.','een beetje warm',['gloeiend heet','ijskoud','heel zout']],
+  ['Het gezin leefde <b>sober</b>. De buren daarentegen kochten elke week dure spullen.','eenvoudig, zonder luxe',['met veel luxe','ver weg van de stad','heel vrolijk']],
+  ['De <b>archeologen</b> groeven maandenlang en vonden potten en munten van tweeduizend jaar oud.','mensen die resten van vroeger onderzoeken',['mensen die potten bakken','mensen die munten verkopen','mensen die huizen bouwen']],
+  ['De winkelier was <b>gul</b>: hij gaf elk kind een extra snoepje.','vrijgevig',['gierig','boos','haastig']],
+  ['De hond was <b>ondervoed</b>. Je kon zijn ribben tellen.','veel te mager door te weinig eten',['dik door te veel eten','ziek door een val','heel vuil']],
+  ['De ploeg speelde <b>defensief</b>: ze verdedigde alleen en viel nooit aan.','verdedigend',['aanvallend','oneerlijk','vermoeid']],
+  ['Na de <b>turbulente</b> vlucht, vol schokken en stoten, was iedereen blij om te landen.','erg onrustige',['heel korte','rustige','goedkope']],
+  ['Het eiland is <b>onbewoond</b>; er leven alleen vogels en krabben.','zonder mensen',['zonder dieren','zonder bomen','vol huizen']],
+  ['Haar uitleg was <b>helder</b>, terwijl die van Tibo erg verwarrend was.','duidelijk',['lang','onduidelijk','vreemd']],
+  ['Opa is <b>bijziend</b>. Zonder bril ziet hij niets van wat ver weg is.','hij ziet slecht in de verte',['hij ziet slecht van dichtbij','hij hoort slecht','hij is kleurenblind']],
+];
+const FAM = [['kleur',['verkleuren'],['kleuter','klei','kleding']],['werk',['werkloos'],['wereld','werpen','merk']],['vriend',['bevriend'],['vriezen','vrijheid','vreemd']],['reis',['reiziger'],['rijst','rijzen','reiger']],['bloem',['gebloemd'],['bloed','blauw','boom']],['speel',['speelgoed'],['spoelen','spiegel','spieken']],['zon',['zonnig'],['zoon','zone','zoen']],['sterk',['versterken'],['ster','sterven','storten']],['kook',['kookpot'],['koekoek','kokos','kooi']],['leer',['leerling'],['leeg','leeuw','ladder']]];
+const SIGN = [['met andere woorden','een synoniem'],['oftewel','een synoniem'],['daarentegen','een antoniem'],['in tegenstelling tot','een antoniem'],['echter','een antoniem'],['zoals','voorbeelden'],['bijvoorbeeld','voorbeelden'],['denk maar aan','voorbeelden'],['neem nu','voorbeelden']];
+const MEERV = [["foto","foto's"],["baby","baby's"],["taxi","taxi's"],["pizza","pizza's"],["cadeau","cadeaus"],["auto","auto's"],["bureau","bureaus"],["hobby","hobby's"],["kiwi","kiwi's"],["menu","menu's"],["café","cafés"],["druif","druiven"],["huis","huizen"]];
+const VERKL = [['raam',['raampje']],['boom',['boompje']],['koning',['koninkje']],['ketting',['kettinkje']],['ring',['ringetje']],['bloem',['bloemetje','bloempje']],['foto',['fotootje']],['auto',['autootje']],['glas',['glaasje']],['bal',['balletje']],['tuin',['tuintje']],['woning',['woninkje']],['kat',['katje']],['duim',['duimpje']]];
+
+/* ===== Leerstof: Schooltaalwoorden ===== */
+const STW = [ // woord, soort, synoniem/omschrijving
+  ['informeren','ww','inlichten'],['selecteren','ww','uitkiezen'],['verantwoorden','ww','uitleggen waarom'],['vervangen','ww','de plaats innemen van'],['vervolledigen','ww','aanvullen'],['verzinnen','ww','bedenken'],
+  ['akkoord gaan met','ww','instemmen met'],['appreciëren','ww','waarderen'],['observeren','ww','aandachtig bekijken'],['rangschikken','ww','ordenen'],['vermijden','ww','ontwijken'],
+  ['de bewering','zn','de uitspraak'],['het criterium','zn','de eis'],['de formulering','zn','de manier waarop je iets zegt of schrijft'],['de instructie','zn','de aanwijzing'],['de situatie','zn','de toestand'],
+  ['de beschrijving','zn','de omschrijving'],['de enquête','zn','het onderzoek met vragen'],['de feedback','zn','de reactie op je werk'],['het fragment','zn','het gedeelte'],['de ordening','zn','de schikking'],
+  ['automatisch','bn','vanzelf'],['interessant','bn','boeiend'],['uitgebreid','bn','ruim, uitvoerig'],['uniek','bn','enig in zijn soort'],['concreet','bn','duidelijk en tastbaar'],['ingewikkeld','bn','moeilijk, complex'],['plots','bn','onverwacht'],['telkens','bn','iedere keer'],['vermoedelijk','bn','waarschijnlijk'],
+];
+const STANT = [['concreet','abstract'],['ingewikkeld','gemakkelijk'],['plots','geleidelijk'],['telkens','af en toe'],['vermoedelijk','zeker'],['uniek','alledaags'],['uitgebreid','beknopt'],['interessant','saai']];
+const STDEF = [ // definitie, antwoord(en), lengte-hint wordt berekend
+  ['iemand inlichten',['informeren']],['uit een groep kiezen wat je nodig hebt',['selecteren']],['uitleggen waarom je iets gedaan of gekozen hebt',['verantwoorden']],['iets in de plaats zetten van iets anders',['vervangen']],['aanvullen tot het volledig is',['vervolledigen']],['met je fantasie bedenken',['verzinnen']],
+  ['waarderen, op prijs stellen',['appreciëren','apprecieren']],['aandachtig bekijken',['observeren']],['in een bepaalde volgorde zetten',['rangschikken']],['ervoor zorgen dat iets niet gebeurt, ontwijken',['vermijden']],
+  ['een uitspraak waarvan je zegt dat ze waar is',['bewering']],['een eis waaraan iets moet voldoen (enkelvoud)',['criterium']],['een aanwijzing over hoe je iets moet doen',['instructie']],['de toestand, de omstandigheden',['situatie']],['een onderzoek waarbij je aan veel mensen vragen stelt',['enquête','enquete']],['een stukje uit een tekst, film of muziekstuk',['fragment']],['reactie op iemands werk, waardoor hij of zij kan verbeteren',['feedback']],
+  ['vanzelf, zonder dat je er iets voor moet doen',['automatisch']],['boeiend',['interessant']],['waarvan er maar één bestaat',['uniek']],['moeilijk, complex',['ingewikkeld']],['onverwacht, opeens',['plots']],['waarschijnlijk',['vermoedelijk']],['iedere keer opnieuw',['telkens']],['niet vaag maar duidelijk en tastbaar; tegenstelling van abstract',['concreet']]];
+const STZIN = [
+  ['De deur van de winkel gaat ___ open als je ervoor staat.','automatisch',['uitgebreid','uniek','vermoedelijk']],
+  ['Van dit schilderij bestaat er maar één exemplaar: het is ___.','uniek',['automatisch','beknopt','telkens']],
+  ['Je moet je keuze ___: leg uit waarom je dit boek koos.','verantwoorden',['vermijden','rangschikken','vervangen']],
+  ['De trainer moet elf spelers ___ uit een groep van twintig.','selecteren',['informeren','verzinnen','formuleren']],
+  ['___ deze zinnen: vul de ontbrekende woorden in.','Vervolledig',['Vermijd','Observeer','Beweer']],
+  ['Een goede schoen moet aan vier ___ voldoen: licht, stevig, soepel en waterdicht.','criteria',['fragmenten','instructies','enquêtes']],
+  ['Volg de ___ op de doos om de tent op te zetten.','instructies',['criteria','beweringen','enquêtes']],
+  ["'Vissen kunnen niet slapen.' Klopt deze ___?",'bewering',['instructie','ordening','enquête']],
+  ['We luisterden naar een kort ___ uit het hoorspel.','fragment',['criterium','formulering','bewering']],
+  ['Met een ___ vroegen we aan honderd leerlingen hoe ze naar school komen.','enquête',['instructie','ordening','formulering']],
+  ['De bioloog wil de vogels stil ___ vanuit een hut.','observeren',['vervolledigen','verantwoorden','formuleren']],
+  ['___ de woorden in alfabetische volgorde.','Rangschik',['Vermijd','Verzin','Informeer']],
+  ['Na mijn spreekbeurt gaf de juf me nuttige ___: ik moet trager spreken.','feedback',['ordening','enquête','situatie']],
+  ['Met een omweg kun je de file ___.','vermijden',['appreciëren','verantwoorden','vervolledigen']],
+  ['De kapotte lamp moet je ___ door een nieuwe.','vervangen',['verzinnen','observeren','vermijden']],
+  ['Ik had geen echte smoes, dus moest ik er snel een ___.','verzinnen',['observeren','rangschikken','informeren']],
+];
+const STFAM = [['selecteren','De ___ van spelers voor de finale is bekend. (zelfstandig naamwoord)',['selectie']],['vervangen','Omdat de leraar ziek is, komt er een ___. (persoon)',['vervanger','vervangster']],['beschrijven','Geef een korte ___ van de dader. (zelfstandig naamwoord)',['beschrijving']],['observeren','De ___ van de sterren duurde de hele nacht. (zelfstandig naamwoord)',['observatie']],['de bewering','Hij blijft ___ dat hij gelijk heeft. (infinitief)',['beweren']],['de formulering','Je moet je vraag duidelijker ___. (infinitief)',['formuleren']],['interessant','Zij heeft veel ___ voor sterrenkunde. (zelfstandig naamwoord, enkelvoud)',['interesse','belangstelling']],['informeren','Op deze website vind je alle ___. (zelfstandig naamwoord)',['informatie','info']],['vermoedelijk','Ik heb een ___ wie de taart opgegeten heeft. (zelfstandig naamwoord)',['vermoeden']],['ordenen','Zijn bureau ligt er altijd ___ bij. (bijvoeglijk naamwoord op -lijk)',['ordelijk']],['uitgebreid','De school wil haar aanbod ___. (infinitief)',['uitbreiden']],['verzinnen','Geloof hem niet, dat verhaal is een ___. (zelfstandig naamwoord)',['verzinsel']]];
+const STODD = [['verzinnen','bedenken','uitvinden','vergeten'],['selecteren','kiezen','uitpikken','verzamelen'],['ingewikkeld','moeilijk','complex','eenvoudig'],['plots','opeens','onverwacht','langzaam'],['observeren','bekijken','waarnemen','verstoppen'],['rangschikken','ordenen','sorteren','verwarren'],['instructie','aanwijzing','richtlijn','beloning'],['fragment','stuk','gedeelte','geheel'],['informeren','inlichten','meedelen','verzwijgen'],['vermoedelijk','waarschijnlijk','wellicht','nooit']];
+
+/* ===== Leerstof: Teksten verkennen ===== */
+const TTYPE = [['Er staan prijzen op, de naam van de winkel en het totaalbedrag.','het kasticket'],['Grote letters en een foto, opgehangen op straat, om een fuif aan te kondigen.','de affiche'],['Er staat op: "Kom je zaterdag naar mijn feestje? Laat je iets weten?"','de uitnodiging'],['Eén bekende zin tussen aanhalingstekens, met de naam van wie hem uitsprak.','de quote'],['Er staan een zaalnummer, een stoelnummer en een datum op. Zonder dit mag je niet binnen.','het toegangsticket'],['Er staat een lijst van lessen op, geordend per dag en per uur.','het uurrooster'],['Er staan tekeningen in kadertjes en tekstballonnen in.','het stripverhaal'],['Eerst staat er een lijst van ingrediënten, daarna de bereiding.','het recept'],['Je ziet alle dagen en maanden van een jaar.','de kalender'],['Cijfers worden voorgesteld met staven of lijnen.','de grafiek']];
+const FIC = ['een sprookje','een griezelverhaal','een tekenfilm','een jeugdroman','een fantasyfilm','een detectiveroman'];
+const NFIC = ['een krantenartikel','een reisgids','een woordenboek','een documentaire','een handleiding','een kookboek','een weerbericht','een schoolboek geschiedenis'];
+const IMS = [['Dit deel trekt de aandacht van de lezer.','de inleiding'],['Dit deel wil de lezer overhalen om verder te lezen.','de inleiding'],['In dit deel staat de meeste informatie.','het midden'],['Dit deel is meestal verdeeld in verschillende alinea\'s, vaak met één hoofdpunt per alinea.','het midden'],['In dit deel staat een conclusie.','het slot'],['Dit deel herhaalt de hoofdgedachte en geeft geen nieuwe informatie meer.','het slot']];
+const KERN = [
+  ['Een octopus is een meester in vermommen.',['Hij kan in een tel van kleur veranderen.','Zelfs de structuur van zijn huid past hij aan.','Zo lijkt hij soms op een rots of op wier.'],0],
+  ['Fietsen is goed voor je lichaam.',['Je hart wordt er sterker van.','Je beenspieren krijgen een goede training.','Na een rit slaap je bovendien beter.'],0],
+  ['Chocolade maken vraagt veel tijd.',['Eerst moeten de bonen dagenlang gisten.','Daarna worden ze gedroogd en geroosterd.','Ten slotte worden ze urenlang fijngemalen.'],0],
+  ['Een bibliotheek biedt dus veel meer dan boeken.',['Je kunt er strips en films lenen.','Er zijn computers die je gratis mag gebruiken.','In het weekend volg je er een workshop.'],3],
+  ['Katten zijn vooral \'s nachts actief.',['In het donker gaan ze op jacht.','Hun ogen hebben maar heel weinig licht nodig.','Overdag slapen ze urenlang op een warm plekje.'],0],
+  ['Kortom, het werd een kamp om nooit te vergeten.',['De eerste nacht woei onze tent weg.','De tweede dag viel de kok in de beek.','Op de laatste avond won onze groep de grote quiz.'],3],
+  ['Bomen maken de stad leefbaarder.',['Op hete dagen geven ze schaduw.','Hun bladeren vangen stof op.','Vogels vinden er een plek voor hun nest.'],0],
+];
+const TOPIC = [
+  ['Noor vertrok <b>gisteren</b> naar Gent.','Wanneer',[]],['De voorstelling gaat door <b>in de turnzaal</b>.','Waar',[]],['<b>De burgemeester</b> opende het nieuwe zwembad.','Wie',['Wat']],['Ze lacht <b>omdat ze gewonnen heeft</b>.','Waarom',['Hoe']],
+  ['Op het feest kwamen <b>tachtig</b> gasten.','Hoeveel',['Welke']],['De tocht duurde <b>drie uur</b>.','Hoelang',['Hoeveel','Wat']],['De dief opende het slot <b>met een haarspeld</b>.','Waarmee',['Hoe']],['Sem bracht <b>een taart</b> mee.','Wat',['Welke','Wie']],['Het kamp begint <b>op 5 juli</b>.','Wanneer',[]],['De kat verstopt zich <b>onder het bed</b>.','Waar',[]],['<b>Mijn oma</b> won de loterij.','Wie',['Wat']],['De match werd uitgesteld <b>wegens de storm</b>.','Waarom',['Hoe','Waarmee']],
+];
+const DPUB = [['Zo slaapt je baby eindelijk door','jonge ouders',['kleuters','sportlui','leraren']],['Tien snelle recepten voor op kot','studenten',['kleuters','gepensioneerden','bakkers']],['Eerste hulp bij je eerste dag in het secundair','leerlingen van het eerste jaar',['leerlingen van het zesde jaar','grootouders','kleuters']],['Rustige wandelingen voor wie met pensioen is','gepensioneerden',['tieners','kleuters','topsporters']],['Beter scoren op het veld: tips van een spits','voetballers',['tuiniers','baby\'s','koks']],['Zo krijg je een moestuin zonder slakken','tuiniers',['zwemmers','kleuters','wielrenners']],['Kleurplaten en versjes voor peuters','peuters',['tieners','ouders van tieners','studenten']]];
+const TITEL = [['Waarom dromen we?',['Wat gebeurt er in je hersenen?','Nachtmerries','Een dagboek vol dromen'],'dromen',['hersenziekten','dagboeken','wakker worden']],['Een stad vol bijen',['Honing van het dak','Hoe bouw je een bijenkast?','Pas op voor de wesp'],'bijen in de stad',['wespensteken','hoge gebouwen','honing eten']],['Sneller dan de wind',['De geschiedenis van de fiets','Recht op of liggend?','Records op twee wielen'],'de fiets',['de wind','het weer','autorijden']],['Het witte goud',['Van zeewater tot korrel','Te veel is ongezond','Vroeger zo duur als zilver'],'zout',['zilver','sneeuw','melk']],['Zonder kan je niet',['Acht uur per nacht','Wat doet een tekort met je?','Powernap of niet?'],'slaap',['eten','vrienden','school']]];
+
+/* ===== Leesteksten (eigen teksten) ===== */
+const TEKSTEN = [
+ {t:'Een tuinier zonder handen', a:[['','Bij droog weer zie je ze zelden, maar na een regenbui liggen ze overal: regenwormen. Veel mensen vinden ze vies. Waarom zijn die diertjes dan toch zo nuttig?'],
+   ['Graven zonder schop','Regenwormen maken de grond los. Ze graven de hele dag door gangetjes. Langs die gangetjes raken water en lucht diep in de bodem. Daardoor kunnen de wortels van planten makkelijker groeien.'],
+   ['Van blad tot mest','Regenwormen zorgen ook voor voedsel voor planten. Ze eten dode bladeren en andere plantenresten. Wat ze uitpoepen, heet wormencompost. Met andere woorden: hun uitwerpselen zijn natuurlijke mest.'],
+   ['Gevaar van boven','Een worm heeft veel vijanden. Merels, egels en mollen zijn er dol op. Vooral bij nat weer loopt hij gevaar, want dan kruipt hij naar boven.'],
+   ['','Regenwormen zijn dus veel meer dan vieze diertjes: zonder hen zou onze tuin er heel anders uitzien.']],
+  q:[()=>mc('Wat is het <b>onderwerp</b> van de tekst?','het nut van regenwormen',['de vijanden van de merel','een moestuin aanleggen','het weer in de herfst'],'De titel, de vraag in de inleiding en het slot gaan over hoe nuttig regenwormen zijn.'),
+   ()=>mc('Wat is het belangrijkste <b>doel</b> van de schrijver?','de lezer informeren over regenwormen',['een verzonnen verhaal vertellen','instructies geven om wormen te vangen','reclame maken voor mest'],'De schrijver geeft vooral informatie: hij wil de lezer informeren.'),
+   ()=>mc("Wat is <b>wormencompost</b> volgens de tekst?",'de uitwerpselen van wormen',['dode bladeren','een gangetje in de grond','voedsel voor merels'],"In de tekst staat: 'Wat ze uitpoepen, heet wormencompost.'"),
+   ()=>mc("Welke <b>signaalwoorden</b> in de alinea 'Van blad tot mest' kondigen aan dat er een uitleg met dezelfde betekenis volgt?",'met andere woorden',['wat ze','en andere','zorgen ook'],"'Met andere woorden' kondigt een synoniem of een omschrijving met dezelfde betekenis aan."),
+   ()=>mc("Wat is de <b>kernzin</b> van de alinea 'Graven zonder schop'?",'Regenwormen maken de grond los.',['Ze graven de hele dag door gangetjes.','Langs die gangetjes raken water en lucht diep in de bodem.','Daardoor kunnen de wortels van planten makkelijker groeien.'],'De eerste zin geeft het hoofdpunt, de andere zinnen geven extra uitleg.'),
+   ()=>mc("'… zonder <b>hen</b> zou onze tuin er heel anders uitzien.' Naar wie of wat verwijst <b>hen</b>?",'de regenwormen',['de planten','de merels en egels','de mensen'],"'Hen' verwijst naar 'regenwormen' aan het begin van dezelfde zin."),
+   ()=>mc('Wat doet de schrijver in de <b>inleiding</b>?','Hij maakt de lezer nieuwsgierig met een vraag.',['Hij geeft een conclusie.','Hij somt alle vijanden van de worm op.','Hij legt uit wat wormencompost is.'],'De inleiding eindigt met een vraag die je zin geeft om verder te lezen.')]},
+ {t:'Waarom geeuwen we?', a:[['','Je zit in de klas, je buur geeuwt en even later geeuw jij ook. Geeuwen lijkt wel besmettelijk. Maar waarom doen we het eigenlijk?'],
+   ['Niet alleen bij slaap','We geeuwen niet alleen als we moe zijn. Sommige mensen geeuwen ook als ze zich vervelen of als ze zenuwachtig zijn. Zo zie je soms sporters geeuwen vlak voor een wedstrijd.'],
+   ['Een koel hoofd','Volgens sommige wetenschappers koelt geeuwen onze hersenen af. Als je geeuwt, adem je diep in. De koelere lucht zou het bloed dat naar je hersenen stroomt een beetje afkoelen. Zeker is dat nog niet: er is meer onderzoek nodig.'],
+   ['Doe mij na','Geeuwen werkt aanstekelijk, oftewel: je neemt het makkelijk van elkaar over. Dat gebeurt vooral bij mensen die je goed kent. Heel jonge kinderen steken elkaar daarentegen nog niet aan.'],
+   ['','Waarom we precies geeuwen, blijft dus voorlopig een raadsel.']],
+  q:[()=>mc('Wat is het <b>onderwerp</b> van de tekst?','geeuwen',['slapen','sporters','besmettelijke ziekten'],'Je vindt het onderwerp in de titel. Alle alinea\'s gaan over geeuwen.'),
+   ()=>mc('Wat betekent <b>aanstekelijk</b> in deze tekst?','je neemt het makkelijk van elkaar over',['je wordt er ziek van','je valt ervan in slaap','je koelt ervan af'],"Na het signaalwoord 'oftewel' staat de betekenis."),
+   ()=>tf('Volgens de tekst weten wetenschappers zeker dat geeuwen de hersenen afkoelt.',false,"In de tekst staat: 'Zeker is dat nog niet: er is meer onderzoek nodig.'"),
+   ()=>mc("Welk <b>signaalwoord</b> in de alinea 'Doe mij na' wijst op een tegenstelling?",'daarentegen',['oftewel','vooral','makkelijk'],"'Daarentegen' geeft een tegenstelling aan: mensen die je kent ↔ heel jonge kinderen."),
+   ()=>mc('Van wie vertelt de tekst dat ze soms geeuwen vlak <b>voor een wedstrijd</b>?','sporters',['leerlingen','wetenschappers','heel jonge kinderen'],"Dat staat in de alinea 'Niet alleen bij slaap'."),
+   ()=>mc('Wat doet de schrijver in het <b>slot</b>?','Hij geeft een conclusie.',['Hij geeft een nieuw voorbeeld.','Hij noemt een nieuwe theorie.','Hij geeft instructies.'],'Het slot is een conclusie: het blijft een raadsel. Er komt geen nieuwe informatie bij.'),
+   ()=>mc("Wat is de <b>kernzin</b> van de alinea 'Niet alleen bij slaap'?",'We geeuwen niet alleen als we moe zijn.',['Sommige mensen geeuwen ook als ze zich vervelen of als ze zenuwachtig zijn.','Zo zie je soms sporters geeuwen vlak voor een wedstrijd.'],'De eerste zin geeft het hoofdpunt. De volgende zinnen zijn aanvullende zinnen met voorbeelden.')]},
+ {t:'Een bibliotheek aan de gevel', a:[['','Een kastje aan een gevel, vol boeken die niemand bewaakt. In steeds meer straten vind je zo\'n boekenruilkast. Hoe werkt dat?'],
+   ['Nemen en geven','De regel van een boekenruilkast is eenvoudig. Je neemt een boek mee en je zet een ander boek in de plaats. Je hebt geen lidkaart nodig en je betaalt niets.'],
+   ['Meer dan lezen','Zo\'n kastje brengt ook buren samen. Wie een boek komt kiezen, raakt vaak aan de praat met anderen. Buurman Karel (78) kent zo intussen de halve straat.'],
+   ['Niet alles lukt','Soms loopt het ook mis. Sommige mensen nemen boeken mee zonder er een terug te zetten. Anderen dumpen er rommel, zoals oude telefoonboeken en kapotte cd\'s.'],
+   ['','Een boekenruilkast werkt dus alleen als iedereen meedoet. Dan is ze een schat voor de hele buurt.']],
+  q:[()=>mc('Wat is het <b>onderwerp</b> van de tekst?','de boekenruilkast',['buurman Karel','telefoonboeken','een lidkaart van de bibliotheek'],'De hele tekst gaat over de boekenruilkast.'),
+   ()=>mc('Welke <b>regel</b> geldt bij een boekenruilkast?','Neem een boek en zet een ander in de plaats.',['Breng het boek binnen drie weken terug.','Betaal een klein bedrag per boek.','Toon eerst je lidkaart.'],"Dat staat in de alinea 'Nemen en geven'."),
+   ()=>mc("Waarvoor dient het <b>signaalwoord</b> 'zoals' in de alinea 'Niet alles lukt'?",'Het kondigt voorbeelden aan.',['Het kondigt een tegenstelling aan.','Het kondigt een synoniem aan.','Het kondigt een conclusie aan.'],"Na 'zoals' volgen voorbeelden van rommel: telefoonboeken en cd's."),
+   ()=>mc('Waarom kent buurman Karel de halve straat?','Hij raakt aan de praat bij de boekenruilkast.',['Hij bewaakt de boeken.','Hij werkt in de bibliotheek.','Hij verkoopt boeken.'],"De alinea 'Meer dan lezen' legt uit dat het kastje buren samenbrengt."),
+   ()=>mc("Wat is de <b>kernzin</b> van de alinea 'Niet alles lukt'?",'Soms loopt het ook mis.',['Sommige mensen nemen boeken mee zonder er een terug te zetten.',"Anderen dumpen er rommel, zoals oude telefoonboeken en kapotte cd's."],'De eerste zin geeft het hoofdpunt, de andere zinnen geven voorbeelden.'),
+   ()=>mc("'Dan is <b>ze</b> een schat voor de hele buurt.' Waarnaar verwijst <b>ze</b>?",'de boekenruilkast',['de buurt','de schat','iedereen'],"'Ze' verwijst naar 'een boekenruilkast' in de zin ervoor."),
+   ()=>tf('In het slot van de tekst staat een conclusie.',true,"'Een boekenruilkast werkt dus alleen als iedereen meedoet.' Het woord 'dus' wijst op een conclusie.")]},
+ {t:'Uitgevonden dankzij een hond', a:[['','Je sluit er je schoenen, je jas en je boekentas mee: klittenband. Wist je dat we die handige uitvinding te danken hebben aan een hond?'],
+   ['Een wandeling met gevolgen','Het idee ontstond tijdens een wandeling. In 1941 trok de Zwitserse ingenieur George de Mestral met zijn hond door de natuur. Toen ze thuiskwamen, zat de vacht van het dier vol klissen. Dat zijn plantenbolletjes die zich overal aan vasthechten.'],
+   ['Onder de microscoop','De ingenieur onderzocht de klissen. Onder zijn microscoop zag hij honderden minuscule, oftewel piepkleine haakjes. Die grepen zich vast in de haren van de vacht.'],
+   ['Van bolletje naar band','Toch duurde het jaren voor de uitvinding klaar was. De Mestral zocht lang naar een stof die sterk genoeg was. Uiteindelijk koos hij voor nylon. De ene strook kreeg haakjes, de andere lusjes.'],
+   ['','Klittenband is dus een mooi voorbeeld van een uitvinding die is afgekeken van de natuur.']],
+  q:[()=>mc('Wat is het <b>onderwerp</b> van de tekst?','hoe klittenband is uitgevonden',['wandelen met een hond','hoe een microscoop werkt','planten in Zwitserland'],'De titel, de inleiding en het slot gaan over de uitvinding van klittenband.'),
+   ()=>mc('Wat betekent <b>minuscule</b> in deze tekst?','piepkleine',['scherpe','stevige','harige'],"'Oftewel' kondigt een synoniem aan: piepkleine."),
+   ()=>mc('Hoe helpt de tekst je om het woord <b>klissen</b> te begrijpen?','Er staat een omschrijving na.',['Er staat een antoniem na.','Er staan voorbeelden na.','De tekst helpt je niet.'],"De zin 'Dat zijn plantenbolletjes die zich overal aan vasthechten' is een omschrijving."),
+   ()=>mc('Waarom duurde het jaren voor de uitvinding klaar was?','Hij vond niet meteen een stof die sterk genoeg was.',['Hij had geen microscoop.','Zijn hond was ziek.','Hij vond de klissen niet terug.'],"Dat staat in de alinea 'Van bolletje naar band'."),
+   ()=>mc("'<b>Die</b> grepen zich vast in de haren van de vacht.' Waarnaar verwijst <b>die</b>?",'de haakjes',['de haren','de microscopen','de lusjes'],"'Die' verwijst naar de 'piepkleine haakjes' in de zin ervoor."),
+   ()=>mc('Hoe probeert de schrijver je in de <b>inleiding</b> nieuwsgierig te maken?','met een vraag',['met een mop','met een conclusie','met een bevel'],"De inleiding eindigt met de vraag 'Wist je dat …?'"),
+   ()=>mc('Wat is het belangrijkste <b>doel</b> van de schrijver?','de lezer informeren',['instructies geven','zijn mening geven','een verzonnen verhaal vertellen'],'De schrijver geeft feiten over een uitvinding: hij informeert.')]},
+ {t:'Bouw een hotel voor insecten', a:[['','Bijen, kevers en oorwormen zoeken in de herfst een schuilplaats. Met wat afvalhout bezorg je hun een veilig onderkomen, met andere woorden: een plek om te overwinteren.'],
+   ['Verzamel materiaal','Je hebt niet veel nodig. Zoek een houten kistje, holle takjes zoals bamboe, dennenappels en stro.'],
+   ['Vul het kistje','Verdeel het kistje in vakken. Stop in elk vak een ander materiaal. Duw alles stevig aan, zodat er niets uitvalt.'],
+   ['Kies een goede plek','De plaats is belangrijk. Hang je hotel op een zonnige plek, uit de wind. Zet het nooit op de natte grond, want dan begint het hout te rotten.'],
+   ['','Heb je alle stappen gevolgd? Dan hoef je alleen nog te wachten tot de eerste gasten inchecken.']],
+  q:[()=>mc('Wat is het belangrijkste <b>doel</b> van de schrijver?','instructies geven',['een verhaal vertellen','zijn mening geven','reclame maken voor een hotel'],'De schrijver legt stap voor stap uit wat je moet doen. Dat merk je ook aan de vele bevelen.'),
+   ()=>mc('Wat betekent <b>onderkomen</b> in deze tekst?','een schuilplaats',['een cadeau','een maaltijd','een gevaar'],"Na 'met andere woorden' staat de betekenis: een plek om te overwinteren."),
+   ()=>mc('Waarom zet je het hotel niet op de <b>natte grond</b>?','Het hout begint te rotten.',['De insecten verdrinken.','De wind blaast het omver.','Het wordt er te warm.'],"Dat staat in de alinea 'Kies een goede plek'."),
+   ()=>mc("In welke vorm staat het werkwoord in 'Stop in elk vak een ander materiaal.'?",'de imperatief',['de infinitief','het voltooid deelwoord','de verleden tijd'],'Het is een bevelende zin zonder onderwerp: een imperatief.'),
+   ()=>mc("Wie zijn de <b>'gasten'</b> in de laatste zin?",'de insecten',['de toeristen','de buren','de lezers'],'Het hotel is voor insecten bedoeld; zij zijn dus de gasten.'),
+   ()=>mc('Welk <b>teksttype</b> past het best bij deze tekst?','een stappenplan',['een kasticket','een gedicht','een uitnodiging'],'De tekst legt stap voor stap uit hoe je iets maakt.'),
+   ()=>mc("Waarvoor dient het <b>signaalwoord</b> 'zoals' in de alinea 'Verzamel materiaal'?",'Het kondigt een voorbeeld aan.',['Het kondigt een tegenstelling aan.','Het kondigt een conclusie aan.','Het kondigt een synoniem aan.'],'Bamboe is een voorbeeld van holle takjes.')]},
+ {t:'Licht op zolder', a:[['','Hanne trekt haar deken tot onder haar kin. Daar is het weer: een streepje licht onder de zolderdeur. Al drie nachten op rij. \'Er is niemand op zolder\', had papa gezegd. \'Je hebt gedroomd.\''],
+   ['','Op haar tenen sluipt ze de trap op. Elke trede kraakt als een oude knie. Haar hart bonst zo hard dat ze vreest dat het hele huis het hoort. Toch duwt ze de klink naar beneden.'],
+   ['','In het midden van de zolder zit opa. Om hem heen liggen tientallen kleine treinwagons. Zijn handen trillen een beetje, maar zijn ogen stralen. \'Betrapt\', fluistert hij. \'Je verklapt het toch niet? Het is voor de verjaardag van je papa.\''],
+   ['','Even weet Hanne niet wat ze moet zeggen. Dan ploft ze naast hem neer en raapt een rood wagonnetje op. \'Ik heb gedroomd\', zegt ze plechtig. \'Er is niemand op zolder.\'']],
+  q:[()=>mc('Is deze tekst fictie of non-fictie?','fictie: het verhaal is verzonnen',['non-fictie: de tekst geeft feiten','non-fictie: de tekst geeft instructies','non-fictie: het is een nieuwsbericht'],'De tekst vertelt een verzonnen verhaal met personages: fictie.'),
+   ()=>mc('Wat is het belangrijkste <b>doel</b> van de schrijver?','een verhaal vertellen',['de lezer informeren over treinen','instructies geven','zijn mening geven'],'De schrijver wil de lezer een verhaal laten beleven.'),
+   ()=>mc('Hoe voelt Hanne zich op de <b>trap</b>?','gespannen',['verveeld','jaloers','opgelucht'],"Haar hart bonst en ze sluipt op haar tenen: ze is gespannen."),
+   ()=>mc("Wat bedoelt Hanne met haar laatste zin: <b>'Er is niemand op zolder'</b>?",'Ze zal het geheim van opa bewaren.',['Ze ziet opa niet.','Ze denkt echt dat ze gedroomd heeft.','Ze is boos op opa.'],'Ze bedoelt iets anders dan wat ze letterlijk zegt: de boodschap zit achter de woorden.'),
+   ()=>mc('Wat doet opa op <b>zolder</b>?','Hij werkt aan een verrassing voor papa.',['Hij slaapt er.','Hij verstopt zich voor Hanne.','Hij zoekt een lamp.'],"Opa zegt: 'Het is voor de verjaardag van je papa.'"),
+   ()=>mc("'Om <b>hem</b> heen liggen tientallen kleine treinwagons.' Naar wie verwijst <b>hem</b>?",'opa',['papa','Hanne','de zolder'],"'Hem' verwijst naar opa in de zin ervoor."),
+   ()=>mc('Waaraan merk je dat opa <b>blij</b> is met zijn werk?','Zijn ogen stralen.',['Zijn handen trillen.','Hij fluistert.','Hij zit in het midden van de zolder.'],'Stralende ogen horen bij de mimiek: ze tonen dat hij blij is.')]},
+];
+const tekstHtml = T => `<h3>${T.t}</h3>`+T.a.map(([h,p])=>(h?`<h4>${h}</h4>`:'')+`<p>${p}</p>`).join('');
+
+/* ===== Vragenbank ===== */
+const BANK = {
+C:[
+ ()=>{ const c=fresh('comm',COMM), R=['zender','ontvanger','boodschap','kanaal','doel','effect'], r=pick(R);
+   return mc('Onderzoek de communicatieve situatie met het <b>communicatiemodel</b>.', c[r], shuffle(R.filter(x=>x!==r)).slice(0,3).map(x=>c[x]),
+     `${ROLUITLEG[r]}<br>Zender: ${c.zender} · boodschap: ${c.boodschap} · ontvanger: ${c.ontvanger} · doel: ${c.doel} · kanaal: ${c.kanaal} · effect: ${c.effect}`,
+     {gg:gg([c.s], (r==='effect'||r==='doel'||r==='kanaal'?'het ':'de ')+'<b>'+r+'</b>')}); },
+ ()=>{ const [s,c,w]=fresh('achter',ACHTER);
+   return mc('De boodschap is niet altijd wat er letterlijk gezegd wordt. Wat bedoelt de zender?', c, w, `De zender bedoelt iets anders dan de letterlijke woorden. Je leidt dat af uit de situatie, de lichaamstaal of het stemgebruik. Bedoeld wordt: ${c}`, {gg:gg([s],'wat de zender <b>echt bedoelt</b>')}); },
+ ()=>{ const [s,d,ex]=fresh('doel',DOELITEMS), o=Object.keys(DOELEN).filter(k=>k!==d&&!ex.includes(k));
+   return mc('Wat is het belangrijkste <b>doel</b> van de zender?'+zin(s), DOELEN[d], shuffle(o).slice(0,3).map(k=>DOELEN[k]), `Hier wil de zender vooral ${DOELEN[d]}.`); },
+ ()=>{ const o=Math.random()<.5;
+   return o ? mc('Welke vraag is een <b>open vraag</b>?', fresh('open',OPEN), shuffle(GESLOTEN).slice(0,3), 'Op een open vraag kun je uitgebreid antwoorden. Een gesloten vraag beantwoord je met ja of nee, of door te kiezen uit enkele mogelijkheden.')
+            : mc('Welke vraag is een <b>gesloten vraag</b>?', fresh('gesl',GESLOTEN), shuffle(OPEN).slice(0,3), 'Bij een gesloten vraag is het antwoord ja of nee, of kies je uit enkele mogelijkheden. Op een open vraag kun je uitgebreid antwoorden.'); },
+ ()=>{ const o=Math.random()<.5, z=o?fresh('form',FORMEEL):fresh('inform',INFORMEEL);
+   return mcf('Is dit <b>formele</b> of <b>informele</b> taal?'+zin(z), ['formele taal','informele taal'], o?'formele taal':'informele taal', 'Formele taal gebruik je bij plechtige gelegenheden of bij onbekenden (u, geachte, alstublieft). Informele taal gebruik je in vertrouwde situaties.'); },
+ ()=>{ const [s,c,w,u]=fresh('gepast',GEPAST);
+   return mc('Welke zin is het meest <b>gepast</b>?', c, w, `Let op de situatie en de ontvanger: ${u}.`, {gg:gg([s],'de meest gepaste zin')}); },
+ ()=>{ const [s,c,ex]=fresh('ruis',RUIS), o=['de zender','de boodschap','de ontvanger','het kanaal'].filter(x=>x!==c&&!ex.includes(x)&&!(c!=='het kanaal'&&x==='de boodschap'));
+   return mc('Er is <b>ruis</b> (storing) in de communicatie. Waar zit de ruis?', c, o, `Ruis = iets loopt fout, waardoor de boodschap niet of verkeerd aankomt. Hier zit de ruis bij ${c}.`, {gg:gg([s],'waar zit de ruis?'), plus:true}); },
+ ()=>{ const [s,c]=fresh('ovur',OVUR), O=['oriënteren','voorbereiden','uitvoeren','reflecteren'];
+   return mcf('Bij welke stap van <b>OVUR</b> hoort dit?'+zin(s), O, c, 'OVUR: oriënteren (Wat moet je doen?), voorbereiden (Hoe pak je dat aan?), uitvoeren (Je voert de opdracht uit), reflecteren (Je denkt na over je aanpak en het resultaat).'); },
+ ()=> Math.random()<.5 ? mc('Wat doe je <b>niet</b> als je <b>actief luistert</b>?', fresh('luisn',LUIS_NOK), shuffle(LUIS_OK).slice(0,3), 'Actief luisteren: kijk de spreker aan, knik, gebruik kleine woordjes, stel bijvragen en pas je gelaatsuitdrukking aan.')
+   : mc('Wat doe je als je <b>actief luistert</b>?', fresh('luis',LUIS_OK), shuffle(LUIS_NOK).slice(0,3), 'Actief luisteren: kijk de spreker aan, knik, gebruik kleine woordjes, stel bijvragen en pas je gelaatsuitdrukking aan.'),
+ ()=>{ const [s,c]=fresh('vita',VITA);
+   return mcf('Bij welk onderdeel van <b>VITA</b> hoort deze feedback?'+zin(s), ['volume','intonatie','tempo','articulatie'], c, 'VITA: volume (luid of stil), intonatie (hoog of laag), tempo (traag of snel), articulatie (duidelijk of onduidelijk uitspreken).'); },
+ ()=>{ const L={V:'volume',I:'intonatie',T:'tempo',A:'articulatie'}, k=fresh('vitaw',['V','I','T','A']);
+   return inv(`Waarvoor staat de <b>${k}</b> in <b>VITA</b> (spreektechniek)?`, L[k], 'VITA = volume, intonatie, tempo, articulatie.', {hint:'Typ één woord.'}); },
+ ()=>{ const [s,c,ex]=fresh('mohab',MOHAB), O=['mimiek','oogcontact','houding','afstand','bewegingen'].filter(x=>!ex.includes(x));
+   return mcf('Bij welk element van <b>lichaamstaal</b> (MOHAB) hoort dit?'+zin(s), O, c, 'MOHAB = mimiek (gezicht), oogcontact, houding, afstand, bewegingen (en gebaren).'); },
+ ()=>{ const [s,c,w]=fresh('fb',FB);
+   return mc(`Welke <b>feedback</b> ${s} is het best?`, c, w, 'Goede feedback begint met een sterk punt, is respectvol, vertrekt vanuit de ik-persoon en geeft een tip om te verbeteren.'); },
+ ()=>{ const [s,c,w]=fresh('bericht',BERICHT);
+   return mc('Een helder bericht is <b>volledig</b>. Welke informatie ontbreekt?', c, w, `Een volledig bericht vertelt de lezer alles wat hij moet weten. Hier ontbreekt: ${c}.`, {gg:gg([s],'wat ontbreekt er?')}); },
+ ()=>{ const [s,c,u]=fresh('crit',CRIT);
+   return mcf('Wat is het <b>grootste probleem</b> met dit bericht?'+zin(s), ['Het is niet volledig.','Het is niet correct (spelling, hoofdletters, leestekens).','Het is niet gepast voor de ontvanger.'], {volledig:'Het is niet volledig.',correct:'Het is niet correct (spelling, hoofdletters, leestekens).',gepast:'Het is niet gepast voor de ontvanger.'}[c], u); },
+ ()=>tfPick('ctf',[
+   ['Als het effect overeenkomt met het doel van de zender, is de communicatie geslaagd.',true,'Het effect is dan precies wat de zender wilde bereiken.'],
+   ['Een gebaar is ook een vorm van communicatie.',true,'Communicatie is informatie overbrengen of uitwisselen; dat kan ook met een gebaar of een pictogram.'],
+   ['Een zender kan naast een hoofddoel ook nevendoelen hebben.',true,'Terwijl hij zijn hoofddoel probeert te bereiken, werkt de zender vaak ook aan nevendoelen.'],
+   ['Wanneer je feedback krijgt, verdedig je je het best meteen.',false,'Je bedankt de zender, je vraagt door als je iets niet begrijpt en je ziet feedback als een kans om te leren.'],
+   ['Wanneer je feedback geeft, begin je het best met wat er fout liep.',false,'Je begint met de sterke punten.'],
+   ['Doorvragen betekent dat je een extra vraag stelt om een duidelijker antwoord te krijgen.',true,"Bijvoorbeeld: 'Kun je een voorbeeld geven?'"],
+   ['Op een spiekbriefje voor een spreekbeurt schrijf je het best je volledige tekst.',false,'Je noteert kernwoorden: de belangrijkste informatie, kort.'],
+   ["'Goed' en 'slecht' zijn sterke beoordelingswoorden.",false,"Het zijn weinigzeggende woorden. 'Spannend', 'ontroerend' of 'geloofwaardig' zeggen veel meer."],
+ ]),
+],
+O:[
+ ()=>{ const [m,t]=fresh('ond',ONDERWERP), o=strip(marks(m)[0]);
+   return sel('Duid het <b>onderwerp</b> aan. Tik op <b>alle</b> woorden van het onderwerp.', m, `Vraag: over wie of wat wordt er iets gezegd? Het onderwerp is <b>${o}</b> (${t==='W'?'een woord':t==='WG'?'een woordgroep':'een zin'}).`); },
+ ()=>{ const m=fresh('ondv',ONDVRAAG), o=strip(marks(m)[0]);
+   return sel('Duid het <b>onderwerp</b> van deze vraag aan. Tik op <b>alle</b> woorden van het onderwerp.', m, `Vraag: over wie of wat wordt er iets gezegd? Maak van de vraag een mededeling en zoek het woord dat bij de persoonsvorm hoort. Het onderwerp is <b>${o}</b>.`, PLUS); },
+ ()=>{ const [m,t]=fresh('ondw',ONDERWERP), N={W:'een woord',WG:'een woordgroep',Z:'een zin'};
+   return mcf('Waaruit bestaat het vetgedrukte <b>onderwerp</b>?'+zin(bold(m)), ['een woord','een woordgroep','een zin'], N[t], `<b>${strip(marks(m)[0])}</b> is ${N[t]}.${t==='Z'?' Er staat een werkwoord met een eigen onderwerp in.':''}`); },
+ ()=>{ const [s,c]=fresh('pers',PERS);
+   return mc(`In welke <b>persoon</b> staat dit onderwerp?${zin(s)}`, c, others(c,PERS.map(x=>x[1])), '1ste persoon = ik, wij (wie spreekt). 2de persoon = jij, jullie (tegen wie je spreekt). 3de persoon = hij, zij, het, zij/ze (over wie je spreekt).<br>'+`<b>${s}</b> = ${c}.`); },
+ ()=>{ const [s,c]=fresh('verv',VERVANG);
+   return mc('Door welk woord kun je het vetgedrukte onderwerp <b>vervangen</b>?'+zin(s), c, others(c,['hij','zij','het','wij','jullie']), `Je kunt het onderwerp vervangen door <b>${c}</b>.`); },
+ ()=>{ const [s,v,t,r]=fresh('volg',VOLG), c=cap(`${t} ${v} ${s} ${r}.`);
+   return mc(`Herschrijf de zin zodat hij begint met <b>'${t}'</b>.${zin(cap(`${s} ${v} ${t} ${r}.`))}`, c, [cap(`${t} ${s} ${v} ${r}.`), cap(`${t} ${r} ${s} ${v}.`), cap(`${r} ${v} ${s} ${t}.`)].filter(x=>x!==c),
+     `Als een ander zinsdeel vooraan staat, komt het onderwerp achter de persoonsvorm: ${c}`); },
+ ()=>{ const a=fresh('inv',VOLG), rest=shuffle(VOLG.filter(x=>x!==a)).slice(0,3), z=x=>cap(`${x[0]} ${x[1]} ${x[2]} ${x[3]}.`), c=cap(`${a[2]} ${a[1]} ${a[0]} ${a[3]}.`);
+   return mc('In welke zin staat het onderwerp <b>niet vooraan</b>?', c, rest.map(z), `In deze zin staat '${a[2]}' vooraan; het onderwerp is '${a[0]}'. Door andere zinsdelen vooraan te plaatsen, klinkt je tekst minder eentonig.`); },
+ ()=>tfPick('otf',[
+   ['Het onderwerp is het zinsdeel waarover in de zin iets gezegd wordt.',true,'Je vraagt: over wie of waarover wordt er iets gezegd?'],
+   ['Het onderwerp staat altijd vooraan in de zin.',false,"In 'Morgen vertrekt de bus' staat het onderwerp 'de bus' achteraan."],
+   ['Een onderwerp kan een hele zin zijn.',true,"Bijvoorbeeld: 'Wie te laat komt, krijgt straf.'"],
+   ['Een onderwerp bestaat altijd uit één woord.',false,'Het kan een woord, een woordgroep of een zin zijn.'],
+   ['Een tekst klinkt eentonig als het onderwerp telkens vooraan staat.',true,'Plaats daarom ook eens een ander zinsdeel vooraan.'],
+   ['Het eerste zinsdeel van een zin krijgt soms de nadruk.',true,'Door een zinsdeel vooraan te plaatsen, leg je er nadruk op.'],
+   ["In de zin 'Straks eten wij pannenkoeken' is 'pannenkoeken' het onderwerp.",false,"Er wordt iets gezegd over 'wij': dat is het onderwerp."],
+ ]),
+],
+W:[
+ ()=>wwVraag('hij'), ()=>wwVraag(pick(['ik','ik','jij','jij','mv'])), ()=>wwVraag('jijna'), ()=>wwVraag('je'), ()=>wwVraag('imp'), ()=>wwVraag(pick(['hij','jijna','imp'])),
+ ()=>{ const [i,s]=fresh('stam',STAM); return inv(`Schrijf de <b>stam</b>.`, s, `De stam is de ik-vorm in de tegenwoordige tijd: ik <b>${s}</b>.`, {gg:gg([`infinitief: <b>${i}</b>`],'de stam'), hint:'Typ één woord, zonder ik.'}); },
+ ()=>{ const [v,i]=fresh('infin',INFIN); return inv('Schrijf de <b>infinitief</b>.', i, `De infinitief is het hele werkwoord: <b>${i}</b>.${v.includes('…')?' De twee delen schrijf je in de infinitief aan elkaar.':''}`, {gg:gg([`persoonsvorm: <b>${v}</b>`],'de infinitief'), hint:'Typ één woord.'}); },
+ ()=>{ const m=fresh('pv',PVZIN); return sel('Duid de <b>persoonsvorm</b> aan. Tik op één woord.', m, `De persoonsvorm is <b>${marks(m)[0].toLowerCase()}</b>. Zet de zin in een andere tijd (of maak er een ja-neevraag van): de persoonsvorm verandert (of komt vooraan).`); },
+ ()=>{ const [m,c]=fresh('foutww',FOUTWW); return sel('Eén werkwoord is <b>fout gespeld</b>. Duid het aan.', m, `<b>${marks(m)[0]}</b> is fout. Juist is: <b>${c}</b>.`, PLUS); },
+ ()=>{ const i=fresh('zj',ZJUIST.map((_,k)=>k)), w=shuffle(ZFOUT.map((_,k)=>k).filter(k=>k!==i)).slice(0,3);
+   return mc('In welke zin is de persoonsvorm of de imperatief <b>juist</b> gespeld?', ZJUIST[i], w.map(k=>ZFOUT[k]), 'De foute zinnen verbeterd:<br>'+w.map(k=>`${ZFOUT[k]} → <b>${ZJUIST[k].replace('Word je snel','Word jij snel')}</b>`).join('<br>')); },
+ ()=>{ const [s,k]=fresh('jerol',JEROL); return mc("Wat is <b>je</b> in deze zin?"+zin(s), JENM[k], Object.keys(JENM).filter(x=>x!==k).map(x=>JENM[x]), {o:"Je kunt 'je' vervangen door 'jij': het is het onderwerp. Staat het achter de persoonsvorm, dan valt de -t weg.",b:"Je kunt 'je' vervangen door 'jouw': het hoort bij het volgende zelfstandig naamwoord.",w:"'Je' hoort bij een werkwoord met 'zich' (zich wassen, zich haasten …)."}[k]); },
+ ()=>tfPick('wtf',[
+   ["Als 'jij' achter de persoonsvorm staat, valt de uitgang -t weg.",true,"Jij vindt → vind jij?"],
+   ["Als 'je zus' achter de persoonsvorm staat, valt de uitgang -t weg.",false,"'Je zus' is 3de persoon enkelvoud: Vindt je zus dat leuk?"],
+   ['De imperatief schrijf je meestal zoals de stam.',true,'Bijvoorbeeld: Antwoord! Meld je aan!'],
+   ['In een bevelende zin staat meestal geen onderwerp.',true,"Bijvoorbeeld: 'Ruim je kamer op!'"],
+   ["In het meervoud gebruik je in de tegenwoordige tijd het hele werkwoord.",true,'wij vinden, jullie vinden, zij vinden'],
+   ["Bij 'ik' schrijf je in de tegenwoordige tijd stam + t.",false,"Bij 'ik' schrijf je alleen de stam: ik vind, ik word."],
+ ]),
+],
+B:[
+ ()=>{ const t=pick(['s','a','g']), w=t==='s'?fresh('sam',SAM):t==='a'?fresh('afl',AFL):fresh('gro',GRO), N={s:'een samenstelling',a:'een afleiding',g:'een grondwoord'};
+   return mcf(`Wat voor woord is dit?${zin(w)}`, ['een samenstelling','een afleiding','een grondwoord'], N[t], 'Samenstelling = twee of meer grondwoorden samen (regen + jas). Afleiding = grondwoord met een voorvoegsel en/of achtervoegsel (vriend + schap). Een grondwoord kun je niet verder verdelen.<br>'+`<b>${w}</b> is ${N[t]}.`); },
+ ()=> Math.random()<.5 ? mc('Welk woord is een <b>samenstelling</b>?', fresh('sam2',SAM), shuffle(AFL).slice(0,3), 'Een samenstelling bestaat uit twee of meer grondwoorden. De andere woorden zijn afleidingen.')
+   : mc('Welk woord is een <b>afleiding</b>?', fresh('afl2',AFL), shuffle(SAM).slice(0,3), 'Een afleiding bestaat uit een grondwoord met een voorvoegsel en/of achtervoegsel. De andere woorden zijn samenstellingen.'),
+ ()=>{ if(Math.random()<.5){ const [w,a]=fresh('voorv',VOORV); return inv(`Schrijf het <b>voorvoegsel</b> van dit woord.${zin(w)}`, a, `Het voorvoegsel staat vooraan: <b>${a}-</b>${w.slice(a.length)}.`, {hint:'Typ alleen het voorvoegsel.'}); }
+   const [w,a]=fresh('achterv',ACHTERV); return inv(`Schrijf het <b>achtervoegsel</b> van dit woord.${zin(w)}`, a, `Het achtervoegsel staat achteraan: ${w.slice(0,-a.length)}<b>-${a}</b>.`, {hint:'Typ alleen het achtervoegsel.'}); },
+ ()=>{ const [w,a]=fresh('grond',GROND); return inv(`Schrijf het <b>grondwoord</b> van deze afleiding.${zin(w)}`, a, `Laat de voor- en achtervoegsels weg: het grondwoord is <b>${a[0]}</b>.`, {hint:'Typ één woord.'}); },
+ ()=>{ const g=fresh('alfa',ALFA), j=a=>a.join(' – '), W=new Set(); let k=0;
+   while(W.size<3 && k++<60){ const a=[...g], i=rint(0,3); [a[i],a[i+1]]=[a[i+1],a[i]]; if(Math.random()<.4){ const m=rint(0,3); [a[m],a[m+1]]=[a[m+1],a[m]]; } if(j(a)!==j(g)) W.add(j(a)); }
+   return mc('Welke rij staat in <b>alfabetische volgorde</b>?', j(g), [...W].slice(0,3), 'Zijn de eerste letters gelijk, dan kijk je naar de eerste letter die verschilt. Niets komt altijd vóór iets (bv. lam – lamp).<br>'+j(g)); },
+ ()=>{ const [w,a]=fresh('tref',TREF); return inv(`Bij welk <b>trefwoord</b> zoek je dit woord op in het woordenboek?${zin(w)}`, a, `Een trefwoord is de basisvorm: de infinitief van een werkwoord, het enkelvoud van een zelfstandig naamwoord, de kortste vorm van andere woorden. Dus: <b>${a}</b>.`, {hint:'Typ één woord.', art:true}); },
+ ()=>{ const items=LEMMA.flatMap(l=>l.z.map(z=>[l,z])), [l,[z,k]]=fresh('lemma',items);
+   return mc(`Welke betekenis van <b>${l.w}</b> past in de zin?`, l.b[k], l.b.filter((_,i)=>i!==k), `De context (de rest van de zin) helpt je om de juiste betekenis te kiezen: ${l.b[k]}.`, {gg:gg([z],`de juiste betekenis van <b>${l.w}</b>`)}); },
+ ()=>{ const l=fresh('leminfo',LEMINFO), k=pick(['g','l']);
+   return k==='g' ? mcf(`Lees het lemma uit het woordenboek. Wat is het <b>genus</b> van dit woord?${zin(l.t)}`, ['mannelijk','vrouwelijk','onzijdig'], l.g, `m = mannelijk, v = vrouwelijk, o = onzijdig. Dus: ${l.g}.`)
+     : mcf(`Lees het lemma uit het woordenboek. Met welk <b>verwijswoord</b> verwijs je naar dit woord?${zin(l.t)}`, ['hij','ze','het'], {mannelijk:'hij',vrouwelijk:'ze',onzijdig:'het'}[l.g], `Het woord is ${l.g}. Mannelijk → hij, vrouwelijk → ze, onzijdig → het.`); },
+ ()=>{ if(Math.random()<.5){ const [s,c]=fresh('vbez',VERWBEZ); return mcf('Vul het juiste <b>verwijswoord</b> in.'+zin(gap(s)), ['zijn','haar','hun'], c, 'Mannelijk en onzijdig enkelvoud → zijn. Vrouwelijk enkelvoud → haar. Meervoud → hun.'); }
+   const [s,c]=fresh('vper',VERWPERS); return mcf('Vul het juiste <b>verwijswoord</b> in.'+zin(gap(s)), ['Hij','Ze','Het'], c, 'Mannelijk enkelvoud → hij. Vrouwelijk enkelvoud → ze. Onzijdig enkelvoud → het. Meervoud → ze. (Woorden op -ing zijn vrouwelijk.)'); },
+ ()=>{ const [w,c,o]=fresh('syn',SYN); return mc(`Welk woord is een <b>synoniem</b> van <b>${w}</b>?`, c, o, `Synoniemen hebben ongeveer dezelfde betekenis: ${w} = ${c}.`); },
+ ()=>{ const [w,c,o]=fresh('ant',ANT); return mc(`Welk woord is een <b>antoniem</b> van <b>${w}</b>?`, c, o, `Antoniemen hebben een tegengestelde betekenis: ${w} ↔ ${c}.`); },
+ ()=>{ const [w,c,o]=fresh('gev',GEVOEL); return mc(`Synoniemen kunnen een andere <b>gevoelswaarde</b> hebben. Welk woord voor <b>${w}</b> klinkt <b>negatief</b>?`, c, o, `'${cap(c)}' heeft een negatieve gevoelswaarde.`); },
+ ()=>sel('Duid het <b>bijvoeglijk naamwoord</b> aan. Tik op één woord.', fresh('bn',BN), 'Een bijvoeglijk naamwoord geeft een kenmerk of eigenschap van een zelfstandig naamwoord.'),
+ ()=>sel('Duid <b>alle zelfstandige naamwoorden</b> aan (soortnamen én eigennamen).', fresh('zn',ZN), 'Een zelfstandig naamwoord benoemt een mens, dier, plant of ding. Ook eigennamen zijn zelfstandige naamwoorden.'),
+ ()=>sel('Duid <b>alle lidwoorden</b> aan (bepaald, onbepaald en ontkennend).', fresh('lw',LW), 'Lidwoorden: de en het (bepaald), een (onbepaald), geen (ontkennend).'),
+ ()=>{ const [w,c]=fresh('lws',[['de','bepaald'],['het','bepaald'],['een','onbepaald'],['geen','ontkennend']]); return mcf(`Welk soort lidwoord is <b>${w}</b>?`, ['bepaald lidwoord','onbepaald lidwoord','ontkennend lidwoord'], c+' lidwoord', 'Bepaald: de, het. Onbepaald: een. Ontkennend: geen.'); },
+ ()=>{ const [c,o]=fresh('eig',EIG); return mc('De hoofdletters zijn weggelaten. Welk woord is een <b>eigennaam</b> (en krijgt dus een hoofdletter)?', c, o, `<b>${cap(c)}</b> is een eigennaam. De andere woorden zijn soortnamen.`); },
+ ()=>{ const [w,k,a]=fresh('trap',TRAP), n=k==='v'?'vergrotende':'overtreffende'; return inv(`Schrijf de <b>${n} trap</b>.`, k==='o'?[a,a+'e']:a, `Stellende trap: ${w}. De ${n} trap is <b>${a}</b>.`, {gg:gg([`stellende trap: <b>${w}</b>`],`de ${n} trap`), hint:'Typ één woord.', art:true}); },
+ ()=>{ const [w,c]=fresh('traph',TRAPH); return mcf(`In welke trap staat dit bijvoeglijk naamwoord?${zin(w)}`, ['stellende trap','vergrotende trap','overtreffende trap'], c, `Stellend: groot. Vergrotend: groter. Overtreffend: grootst. <b>${w}</b> = ${c}.`); },
+ ()=>{ const [s,k,sg]=fresh('ctx',CTX); return mc('Hoe helpt de <b>context</b> je om het vetgedrukte woord te begrijpen? Door …'+zin(s), CTXNM[k], Object.keys(CTXNM).filter(x=>x!==k).map(x=>CTXNM[x]), `Dat merk je aan: <b>${sg}</b>.`); },
+ ()=>{ const [s,c,w]=fresh('betek',BETEK); return mc('Wat betekent het vetgedrukte woord? Gebruik de context.'+zin(s), c, w, `De omringende woorden verklappen de betekenis: ${c}.`); },
+ ()=>{ const [w,c,o]=fresh('fam',FAM); return mc(`Welk woord hoort bij de <b>woordfamilie</b> van <b>${w}</b>?`, c[0], o, `In <b>${c[0]}</b> herken je '${w}'. De woorden hebben ook een verwante betekenis.`); },
+ ()=>{ const [s,c]=fresh('sign',SIGN); return mcf(`Wat mag je verwachten na het <b>signaalwoord</b> '${s}'?`, ['een synoniem','een antoniem','voorbeelden'], c, 'Synoniem: met andere woorden, oftewel. Antoniem: maar, daarentegen, in tegenstelling tot, echter. Voorbeelden: zoals, bijvoorbeeld, denk maar aan, neem nu.'); },
+ ()=>{ if(Math.random()<.5){ const [w,a]=fresh('meerv',MEERV); return inv('Schrijf het <b>meervoud</b>.', a, `Eén ${w}, twee <b>${a}</b>.`, {gg:gg([`enkelvoud: <b>${w}</b>`],'het meervoud'), hint:'Let op apostrof en accent.'}); }
+   const [w,a]=fresh('verkl',VERKL); return inv('Schrijf het <b>verkleinwoord</b>.', a, `Het verkleinwoord van ${w} is <b>${a[0]}</b>.`, {gg:gg([`zelfstandig naamwoord: <b>${w}</b>`],'het verkleinwoord'), hint:'Typ één woord.', art:true}); },
+],
+S:[
+ ()=>{ const [w,t,s]=fresh('stw',STW); return mc(`Wat betekent het schooltaalwoord <b>${w}</b>?`, s, others(s,STW.filter(x=>x[1]===t).map(x=>x[2])), `<b>${w}</b> = ${s}.`); },
+ ()=>{ const [w,t,s]=fresh('stw2',STW); return mc(`Welk schooltaalwoord past bij deze betekenis?${zin(s)}`, w, others(w,STW.filter(x=>x[1]===t).map(x=>x[0])), `<b>${w}</b> = ${s}.`); },
+ ()=>{ const [w,a]=fresh('stant',STANT); return mc(`Welk woord is een <b>antoniem</b> van <b>${w}</b>?`, a, others(a,STANT.filter(x=>x[0]!==w).map(x=>x[1]).filter(x=>!((w==='uitgebreid'||w==='interessant')&&x==='alledaags')&&!(w==='uniek'&&x==='saai'))), `${w} ↔ <b>${a}</b>`); },
+ ()=>{ const [d,a]=fresh('stdef',STDEF); return inv('Welk <b>schooltaalwoord</b> zoeken we?', a, `Het schooltaalwoord is <b>${a[0]}</b>.`, {gg:gg([d,`begint met <b>${a[0][0]}</b>, ${a[0].length} letters`],'het schooltaalwoord'), hint:'Typ het woord zonder lidwoord.', art:true}); },
+ ()=>{ const [z,c,w]=fresh('stzin',STZIN); return mc('Welk schooltaalwoord past het best in de zin?'+zin(gap(z)), c, w, z.replace('___',`<b>${c}</b>`)); },
+ ()=>{ const [w,z,a]=fresh('stfam',STFAM); return inv(`Vul een woord in uit de <b>woordfamilie</b> van <b>${w}</b>.`, a, z.replace('___',`<b>${a[0]}</b>`).replace(/ \([^)]*\)$/,''), {gg:gg([gap(z)],`een woord uit de familie van <b>${w}</b>`), hint:'Typ alleen het ontbrekende woord.', plus:true}); },
+ ()=>{ const r=fresh('stodd',STODD); return mc('Welk woord hoort <b>niet</b> in het rijtje thuis?', r[3], r.slice(0,3), `De andere drie woorden betekenen ongeveer hetzelfde; <b>${r[3]}</b> niet.`, PLUS); },
+],
+L:[
+ ()=>{ const [s,c]=fresh('ttype',TTYPE); return mc('Welk <b>teksttype</b> is dit?'+zin(s), c, others(c,TTYPE.map(x=>x[1])), `De opmaak en de kenmerken verklappen het teksttype: ${c}.`); },
+ ()=> Math.random()<.5 ? mc('Wat is <b>fictie</b>?', fresh('fic',FIC), shuffle(NFIC).slice(0,3), 'Bij fictie zijn de belangrijkste elementen verzonnen. Non-fictie geeft feiten en wil informeren.')
+   : mc('Wat is <b>non-fictie</b>?', fresh('nfic',NFIC), shuffle(FIC).slice(0,3), 'Non-fictie geeft feiten en wil informeren. Bij fictie zijn de belangrijkste elementen verzonnen.'),
+ ()=>mc('Je leest een tekst <b>oriënterend</b>. Wat doe je dan <b>niet</b>?', fresh('orin',['elke zin van de tekst aandachtig lezen','alle moeilijke woorden opzoeken','een samenvatting van elke alinea maken']), shuffle(['naar de titel kijken','de tussentitels bekijken','de illustraties bekijken','naar de bron en de schrijver kijken','opvallende woorden bekijken']).slice(0,3), 'Oriënterend lezen geeft je een eerste indruk: je bekijkt titel, tussentitels, illustraties, opvallende woorden, schrijver en bron.'),
+ ()=>mc('Je wilt snel de <b>hoofdpunten</b> van een tekst kennen en leest daarom <b>globaal</b>. Wat lees je?', 'de inleiding, het slot, de tussentitels en de eerste en laatste zin van elke alinea', ['alleen de titel','elk woord, van begin tot einde','alleen de zinnen met een getal'], 'Globaal lezen = inleiding, slot, tussentitels en de eerste en laatste zin van elke alinea. Zo vind je het onderwerp en de hoofdpunten.'),
+ ()=>{ const [s,c]=fresh('ims',IMS); return mcf('Welk <b>deel van een tekst</b> is dit?'+zin(s), ['de inleiding','het midden','het slot'], c, 'Inleiding: trekt de aandacht. Midden: de meeste informatie, in alinea\'s. Slot: conclusie of hoofdgedachte, geen nieuwe informatie.'); },
+ ()=>{ const [k,r,p]=fresh('kern',KERN), al=p===0?[k,...r]:[...r,k];
+   return mc('Wat is de <b>kernzin</b> van deze alinea?'+zin(al.join(' ')), k, r, 'De kernzin geeft het belangrijkste punt van de alinea. Vaak is dat de eerste of de laatste zin; de andere zinnen geven extra uitleg of voorbeelden.'); },
+ ()=>{ const [s,c,ex]=fresh('topic',TOPIC); return mc('Met welk <b>vraagwoord</b> vraag je naar het vetgedrukte deel?'+zin(s), c, others(c,['Wie','Wat','Waar','Wanneer','Waarom','Hoe','Hoeveel','Waarmee'].filter(x=>!ex.includes(x))), `Topische vragen zijn vragen als Wie? Wat? Waar? Wanneer? Waarom? Hoe? Hier past: <b>${c}</b>?`); },
+ ()=>{ const [t,c,w]=fresh('dpub',DPUB); return mc('Voor welk <b>doelpubliek</b> is deze tekst bedoeld?'+zin(t), c, w, `De titel verklapt het doelpubliek: ${c}.`); },
+ ()=>{ const [t,tt,c,w]=fresh('titel',TITEL); return mc('Je leest deze tekst oriënterend. Wat is waarschijnlijk het <b>onderwerp</b>?', c, w, `De titel en de tussentitels samen verklappen het onderwerp: ${c}.`, {gg:gg([`titel: <b>${t}</b>`,...tt.map(x=>'tussentitel: '+x)],'het onderwerp van de tekst')}); },
+ ()=>tfPick('ltf',[
+   ['Een heel drukke lay-out maakt een tekst altijd beter leesbaar.',false,'Te veel is te veel: een te drukke lay-out maakt een tekst net moeilijk leesbaar.'],
+   ['De flaptekst van een boek geeft je een idee van het verhaal.',true,'De flaptekst, de cover en de eerste bladzijde helpen je om een boek te kiezen.'],
+   ['Fictie wil vooral feiten geven.',false,'Fictie is verzonnen en wil amuseren, ontroeren of laten beleven. Non-fictie geeft feiten.'],
+   ['Topische vragen helpen je om een tekst of een onderwerp te verkennen.',true,'Met vragen als Wie? Wat? Waar? Wanneer? Waarom? verken je het onderwerp.'],
+   ['In het slot van een tekst geeft de schrijver de meeste nieuwe informatie.',false,'De meeste informatie staat in het midden. In het slot komt geen nieuwe informatie meer.'],
+   ['Door oriënterend te lezen ontdek je vaak al het onderwerp van de tekst.',true,'De titel, tussentitels en illustraties verklappen vaak het onderwerp.'],
+   ['Een alinea herken je aan een witregel of een inspringing.',true,'Zo zie je waar een nieuwe alinea begint. Soms staat er ook een tussentitel boven.'],
+ ]),
+],
+};
+
+/* ===== Examen opbouwen ===== */
+function gen(fn){ let err; for(let k=0;k<40;k++){ try{ return fn(); }catch(e){ err=e; } } throw err; }
+function tekstVragen(n){
+  const T=fresh('tekst',TEKSTEN), idx=TEKSTEN.indexOf(T), qs=T.q.map((_,i)=>i), chosen=[];
+  while(chosen.length<n){ const i=fresh('tekstq'+idx,qs); if(!chosen.includes(i)) chosen.push(i); }
+  return chosen.map(i=>{ const q=gen(T.q[i]); q.tekst=tekstHtml(T); q.topic='T'; q.gid='T'+idx+'_'+i; return q; });
+}
+function buildExam(){
+  SEEN = store.get('seen',{});
+  const qs=[];
+  for(const t of Object.keys(QUOTA)){
+    if(t==='T'){ qs.push(...tekstVragen(QUOTA.T)); continue; }
+    const order=BANK[t].map((_,i)=>i), used=(SEEN['g'+t]||[]);      // onderdelen die het langst geleden gevraagd werden eerst
+    const cnt=i=>used.filter(x=>x===i).length;
+    const sel=shuffle(order).sort((a,b)=>cnt(a)-cnt(b)).slice(0,QUOTA[t]);
+    SEEN['g'+t]=[...used,...sel].slice(-200);
+    const part=[]; sel.forEach(i=>{ let q; for(let k=0;k<20;k++){ q=gen(BANK[t][i]); const id=plain(q.text+(q.gg||'')+(q.toks||[]).join(' ')); if(!part.some(p=>p.id===id)) { part.push({id,q}); break; } if(k===19) part.push({id,q}); } q.topic=t; q.gid=t+i; });
+    qs.push(...shuffle(part.map(p=>p.q)));
+  }
+  store.set('seen',SEEN); SEEN=null;
+  return qs;
+}
+const norm = (s,q) => {
+  let t=String(s==null?'':s).normalize('NFC').replace(/[‘’´`ʼ]/g,"'").replace(/[‐-―−]/g,'-').replace(/\s+/g,' ').trim().toLowerCase();
+  t=t.replace(/[.!?,;:…]+$/,'').replace(/^-+|-+$/g,'').trim();
+  if(q&&q.art) t=t.replace(/^(de|het|een) (?=.)/,'');
+  return t;
+};
+const isAns = a => a!=null && a!=='' && !(Array.isArray(a)&&!a.length) && !(typeof a==='string'&&!a.trim());
+function isCorrect(q,a){
+  if(!isAns(a)) return false;
+  if(q.type==='mc') return a===q.correct;
+  if(q.type==='sel') return Array.isArray(a) && a.length===q.correct.length && [...a].sort((x,y)=>x-y).every((x,i)=>x===q.correct[i]);
+  return q.answers.some(x=>norm(x,q)===norm(a,q));
+}
+const toksOf = (q,a) => [...a].sort((x,y)=>x-y).map((i,k,A)=>(k&&A[k-1]!==i-1?'… ':'')+strip(q.toks[i])).join(' ');
+const fmtAnswer = (q,a) => !isAns(a) ? '—' : q.type==='mc' ? q.choices[a] : q.type==='sel' ? esc(toksOf(q,a)) : esc(a);
+const fmtCorrect = q => q.type==='mc' ? q.choices[q.correct] : q.type==='sel' ? toksOf(q,q.correct) : q.answers.length>1&&!q.art ? q.answers.join(' of ') : q.answers[0];
+
+let S = store.get('state', null);
+const save = () => store.set('state', S);
+
+/* ===== Uitslag doorsturen (ntfy) ===== */
+let flushing=false;
+async function flushResults(){
+  if(flushing) return; flushing=true;
+  try{
+    const q=store.get('outbox',[]); if(!q.length) return;
+    const rest=[];
+    for(const msg of q){
+      try{ const r=await fetch('https://ntfy.sh/',{method:'POST',body:JSON.stringify(msg)}); if(!r.ok) rest.push(msg); }
+      catch(e){ rest.push(msg); }
+    }
+    store.set('outbox',rest);
+    const el=document.getElementById('sendstate');
+    if(el) el.textContent = rest.length ? 'Uitslag nog niet doorgestuurd (geen verbinding?) — wordt later opnieuw geprobeerd.' : 'Uitslag doorgestuurd.';
+  } finally { flushing=false; }
+}
+/* ntfy aanvaardt 4096 bytes; afkappen per byte, niet per teken */
+const cut = (s,max) => { const E=new TextEncoder(); while(E.encode(s).length>max) s=s.slice(0,-20)+'…'; return s; };
+function queueResult(){
+  const r=S.result, n=S.questions.length;
+  const per=Object.keys(QUOTA).map(t=>`${TOPICS[t]}: ${r.per[t][0]}/${r.per[t][1]}`).join('\n');
+  const vraag=q=>{ let s=plain(q.text.replace('<b>Waar of onwaar?</b> ','')); if(q.gg) s+=' '+plain(q.gg.replace(/<b class="h">[^<]*<\/b>/g,'').split('</ul>')[0]); if(q.toks) s+=' '+q.toks.join(' '); return s.slice(0,110); };
+  const fout=S.questions.map((q,i)=>isCorrect(q,S.answers[i])?null:`V${i+1} «${vraag(q)}»: gaf ${isAns(S.answers[i])?(q.type==='inv'?S.answers[i]:plain(fmtAnswer(q,S.answers[i]))):'niets'} — juist: ${plain(fmtCorrect(q))}`).filter(Boolean);
+  const msg={topic:NTFY_TOPIC, title:`Nederlands${S.name?' – '+S.name:''}: ${r.score}/${n} (${r.pct}%)`,
+    message:cut(`${new Date(r.end).toLocaleString('nl-BE')} · duur ${r.min} min\n\n${per}\n\n${fout.length?'Fout:\n'+fout.join('\n'):'Alles juist!'}`,3800),
+    tags:[r.pct>=50?'white_check_mark':'x'], priority:3};
+  const q=store.get('outbox',[]); q.push(msg); store.set('outbox',q);
+}
+
+/* ===== Schermen ===== */
+const app=document.getElementById('app');
+let tekstOpen=true;
+const tags = q => `<span class="tag">${TOPICS[q.topic]}</span>${q.plus?'<span class="tag plus">+ uitbreiding</span>':''}`;
+const tekstBox = (q,open) => q.tekst ? `<details class="tekst"${open?' open':''}><summary>Leestekst</summary>${q.tekst}</details>` : '';
+function render(){
+  if(!S || !S.questions) return renderStart();
+  if(S.finished) return S.reviewing ? renderReview() : renderResult();
+  renderQuestion();
+}
+function renderStart(){
+  const name=store.get('name',''), hist=store.get('hist',[]), tot=Object.values(QUOTA).reduce((s,x)=>s+x,0);
+  app.innerHTML=`<div class="card">
+    <h2>Proefexamen</h2>
+    <p class="muted">Leerstof: deel 1 en deel 2 (les 1 tot en met 20).</p>
+    <ul class="topics">${Object.keys(QUOTA).map(t=>`<li>${TOPICS[t]} — ${QUOTA[t]} vragen <span class="muted small">(${LESSEN[t]})</span></li>`).join('')}</ul>
+    <p class="small muted">${tot} vragen, geen tijdslimiet. Elk proefexamen heeft andere vragen. Let op je spelling bij de invulvragen. Je mag terugbladeren tot je indient.</p>
+    <label class="f" for="nm">Je naam</label>
+    <input type="text" id="nm" value="${esc(name)}" autocomplete="given-name">
+    <div class="row"><span></span><button class="pri" id="go">Start proefexamen</button></div>
+    ${hist.length?`<div class="hist"><b>Vorige pogingen</b><table class="tbl">${hist.slice(-8).reverse().map(h=>`<tr><td>${new Date(h.d).toLocaleDateString('nl-BE')} ${new Date(h.d).toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'})}</td><td>${h.s}/${h.n} (${h.p}%)</td></tr>`).join('')}</table></div>`:''}
+  </div>`;
+  document.getElementById('go').onclick=()=>{
+    const nm=document.getElementById('nm').value.trim(); store.set('name',nm);
+    S={name:nm, questions:buildExam(), answers:[], cur:0, start:Date.now(), finished:false}; save(); render(); window.scrollTo(0,0);
+  };
+}
+function renderQuestion(){
+  const n=S.questions.length, i=S.cur, q=S.questions[i], a=S.answers[i];
+  const answered=S.answers.filter(isAns).length;
+  let body='';
+  if(q.type==='mc') body=`<div class="choices">${q.choices.map((c,k)=>`<button class="choice ${a===k?'sel':''}" data-k="${k}"><span class="k">${'ABCDEF'[k]}</span><span>${c}</span></button>`).join('')}</div>`;
+  else if(q.type==='sel') body=`<div class="words">${q.toks.map((w,k)=>`<button data-w="${k}" class="${Array.isArray(a)&&a.includes(k)?'sel':''}">${esc(w)}</button>`).join('')}</div><div class="hint">Tik op een woord om het aan te duiden. Nog eens tikken = weghalen.</div>`;
+  else body=`<div class="inrow"><input type="text" id="inp" placeholder="antwoord" value="${a!=null?esc(a):''}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-gramm="false" lang="nl"></div><div class="hint">${q.hint||'Typ je antwoord.'} Hoofdletters maken niet uit, de spelling wel.</div>`;
+  app.innerHTML=`<div class="bar"><i style="width:${answered/n*100}%"></i></div>
+   <div class="card">
+    ${tags(q)}
+    <div class="muted small">Vraag ${i+1} van ${n}</div>
+    ${tekstBox(q,tekstOpen)}
+    <div class="qtext">${q.text}</div>${q.gg||''}${body}
+    <div class="row"><button id="prev" ${i===0?'disabled':''}>← Vorige</button>
+      ${i<n-1?`<button class="pri" id="next">Volgende →</button>`:`<button class="pri" id="done">Indienen</button>`}</div>
+    <div class="dots">${S.questions.map((_,k)=>`<button data-go="${k}" class="${isAns(S.answers[k])?'ans':''} ${k===i?'cur':''}">${k+1}</button>`).join('')}</div>
+   </div>`;
+  app.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{ S.answers[i]=+b.dataset.k; save(); renderQuestion(); });
+  app.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{ const k=+b.dataset.w, A=Array.isArray(S.answers[i])?[...S.answers[i]]:[]; S.answers[i]=A.includes(k)?A.filter(x=>x!==k):[...A,k].sort((x,y)=>x-y); save(); renderQuestion(); });
+  const det=app.querySelector('details.tekst'); if(det) det.ontoggle=()=>{ tekstOpen=det.open; };
+  const inp=document.getElementById('inp');
+  if(inp){ inp.oninput=()=>{ S.answers[i]=inp.value; save(); };
+           inp.onkeydown=e=>{ if(e.key==='Enter') (document.getElementById('next')||document.getElementById('done')).click(); };
+           if(matchMedia('(pointer:fine)').matches) inp.focus({preventScroll:true}); }
+  const go=k=>{ S.cur=k; save(); renderQuestion(); window.scrollTo(0,0); };
+  document.getElementById('prev').onclick=()=>go(i-1);
+  const nx=document.getElementById('next'); if(nx) nx.onclick=()=>go(i+1);
+  const dn=document.getElementById('done'); if(dn) dn.onclick=finish;
+  app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+}
+function finish(){
+  const n=S.questions.length, open=n-S.questions.filter((_,i)=>isAns(S.answers[i])).length;
+  if(open>0 && !confirm(`Je hebt nog ${open} vra${open>1?'gen':'ag'} niet beantwoord. Toch indienen?`)) return;
+  const per={}; Object.keys(QUOTA).forEach(t=>per[t]=[0,0]);
+  let score=0; S.questions.forEach((q,i)=>{ const ok=isCorrect(q,S.answers[i]); per[q.topic][1]++; if(ok){score++; per[q.topic][0]++;} });
+  const end=Date.now();
+  S.result={score, pct:Math.round(score/n*100), per, end, min:Math.max(1,Math.round((end-S.start)/60000))};
+  S.finished=true; S.reviewing=false; save();
+  const h=store.get('hist',[]); h.push({d:end,s:score,n,p:S.result.pct}); store.set('hist',h);
+  queueResult(); render(); window.scrollTo(0,0); flushResults();
+}
+function renderResult(){
+  const r=S.result, n=S.questions.length, p=r.pct;
+  const col=p>=50?'var(--ok)':'var(--bad)', bg=p>=50?'var(--okbg)':'var(--badbg)';
+  const msg=p>=85?'Uitstekend!':p>=70?'Goed bezig!':p>=50?'Geslaagd, maar er is nog werk.':'Nog even oefenen — bekijk zeker je fouten.';
+  app.innerHTML=`<div class="card">
+    <div class="score"><div class="ring" style="background:${bg};color:${col}">${r.score}/${n}</div>
+      <div><h2>${p}%</h2><p>${msg}</p><p class="small muted">Duur: ${r.min} min</p></div></div>
+    <table class="tbl">${Object.keys(QUOTA).map(t=>`<tr><td>${TOPICS[t]}</td><td>${r.per[t][0]} / ${r.per[t][1]}</td></tr>`).join('')}</table>
+    <div class="row"><button id="new">Nieuw proefexamen</button><button class="pri" id="rev">Bekijk mijn antwoorden</button></div>
+    <p class="small muted" id="sendstate"></p>
+  </div>`;
+  document.getElementById('rev').onclick=()=>{ S.reviewing=true; save(); render(); window.scrollTo(0,0); };
+  document.getElementById('new').onclick=()=>{ S=null; store.del('state'); render(); window.scrollTo(0,0); };
+}
+function renderReview(){
+  const r=S.result, n=S.questions.length;
+  app.innerHTML=`<div class="card"><div class="row" style="margin-top:0"><b>Jouw antwoorden · ${r.score}/${n}</b><button id="back">← Uitslag</button></div></div>`+
+   S.questions.map((q,i)=>{ const ok=isCorrect(q,S.answers[i]);
+     return `<div class="card rev ${ok?'ok':'bad'}">${tags(q)}
+       <div class="verd">Vraag ${i+1} · ${ok?'✓ Juist':'✗ Fout'}</div>
+       ${tekstBox(q,false)}
+       <div class="qtext">${q.text}</div>${q.toks?zin(esc(q.toks.join(' '))):''}${q.gg||''}
+       <div class="ans mine"><b>Jouw antwoord:</b> ${fmtAnswer(q,S.answers[i])}</div>
+       ${ok?'':`<div class="ans right"><b>Juist antwoord:</b> ${fmtCorrect(q)}</div>`}
+       <div class="uitleg">${q.uitleg}</div></div>`; }).join('')+
+   `<div class="row"><button id="back2">← Uitslag</button><button class="pri" id="new">Nieuw proefexamen</button></div>`;
+  const back=()=>{ S.reviewing=false; save(); render(); window.scrollTo(0,0); };
+  document.getElementById('back').onclick=back; document.getElementById('back2').onclick=back;
+  document.getElementById('new').onclick=()=>{ S=null; store.del('state'); render(); window.scrollTo(0,0); };
+}
+render();
+flushResults();
+</script>
+</body>
+</html>
